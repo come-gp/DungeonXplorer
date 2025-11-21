@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : ven. 21 nov. 2025 à 13:56
+-- Généré le : ven. 21 nov. 2025 à 14:26
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -20,6 +20,18 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `dungeonxplorer`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `appartenir`
+--
+
+CREATE TABLE `appartenir` (
+  `id_user` int(11) NOT NULL,
+  `id_hero` int(11) NOT NULL,
+  `derniere_utilisation` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -255,6 +267,18 @@ CREATE TABLE `monster_loot` (
   `drop_rate` decimal(5,2) DEFAULT 1.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `user`
+--
+
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL,
+  `pseudo` text NOT NULL,
+  `password` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Index pour les tables déchargées
 --
@@ -350,6 +374,12 @@ ALTER TABLE `monster_loot`
   ADD KEY `item_id` (`item_id`);
 
 --
+-- Index pour la table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT pour les tables déchargées
 --
 
@@ -423,6 +453,12 @@ ALTER TABLE `monster`
 -- AUTO_INCREMENT pour la table `monster_loot`
 --
 ALTER TABLE `monster_loot`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `user`
+--
+ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
