@@ -9,16 +9,16 @@
     <title>Dungeon Explorer</title>
 </head>
 <body>
-    <header class="d-flex justify-content-end me-3">
-        <a class="" href="#">Profile</a>
+    <header class="d-flex justify-content-end p-3">
+        <a class="text-link" href="login/index.php">Log in</a>
     </header>
-    <div class="main-container" >
+    <div class="main-container">
         <h1 class="mx-auto text-center">Dungeon Explorer</h1>
         <p class="mx-auto text-center">Bienvenue dans Dungeon Explorer, un jeu dont vous êtes
-            le heros d'aventure palpitant où vous explorez des donjons mystérieux, combattez des monstres redoutables et
-            découvrez des trésors cachés. Préparez-vous à vivre une expérience inoubliable remplie d'action et de stratégie!</p>
+            le heros d'aventure palpitant<br> où vous explorez des donjons mystérieux, combattez des monstres redoutables et
+            découvrez des trésors cachés.<br> Préparez-vous à vivre une expérience inoubliable remplie d'action et de stratégie!</p>
         <div class=" d-flex flex-column align-items-center ">
-            <button class="btn-primary">Nouvelle Partie</button>
+            <a href="new-game/index.php"><button class="btn-primary" href>Nouvelle Partie</button></a>
             <button class="btn-primary">Reprendre</button>
             <button class="btn-primary">Charger</button>
         </div>
