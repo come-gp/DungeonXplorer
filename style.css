@@ -1,59 +1,231 @@
 /* ===================================
-   DungeonXplorer - Bootstrap Color Override
+   DungeonXplorer - Bootstrap Custom Colors
    =================================== */
 
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Pirata+One&family=Roboto:wght@400;700&display=swap');
 
 /* ===================================
-   Variables Bootstrap Override
-   =================================== */
-:root {
-  /* Couleurs principales */
-  --bs-body-bg: #1A1A1A;
-  --bs-body-color: #E5E5E5;
-  --bs-secondary-bg: #2E2E2E;
-  --bs-secondary-color: #BFBFBF;
-  
-  /* Couleurs Bootstrap */
-  --bs-primary: #C4975E;
-  --bs-primary-rgb: 196, 151, 94;
-  --bs-secondary: #2E2E2E;
-  --bs-secondary-rgb: 46, 46, 46;
-  --bs-success: #4A7A66;
-  --bs-success-rgb: 74, 122, 102;
-  --bs-danger: #8B1E1E;
-  --bs-danger-rgb: 139, 30, 30;
-  --bs-warning: #C4975E;
-  --bs-warning-rgb: 196, 151, 94;
-  --bs-info: #BFBFBF;
-  --bs-info-rgb: 191, 191, 191;
-  --bs-light: #E5E5E5;
-  --bs-light-rgb: 229, 229, 229;
-  --bs-dark: #1A1A1A;
-  --bs-dark-rgb: 26, 26, 26;
-  
-  /* Liens */
-  --bs-link-color: #C4975E;
-  --bs-link-hover-color: #8B1E1E;
-  
-  /* Bordures */
-  --bs-border-color: rgba(196, 151, 94, 0.2);
-  
-  /* Polices */
-  --bs-body-font-family: 'Roboto', sans-serif;
-  --bs-heading-font-family: 'Pirata One', cursive;
-}
-
-/* ===================================
    Styles de base
    =================================== */
 body {
-  background-color: var(--bs-body-bg);
-  color: var(--bs-body-color);
+  background-color: #1A1A1A;
+  color: #E5E5E5;
+  font-family: 'Roboto', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
-  font-family: var(--bs-heading-font-family);
+  font-family: 'Pirata One', cursive;
+}
+
+/* ===================================
+   Boutons Gold
+   =================================== */
+.btn-gold {
+  background-color: #C4975E;
+  color: #1A1A1A;
+  border: none;
+  font-weight: 700;
+}
+
+.btn-gold:hover,
+.btn-gold:focus {
+  background-color: #8B1E1E;
+  color: #E5E5E5;
+}
+
+.btn-outline-gold {
+  background-color: transparent;
+  color: #C4975E;
+  border: 2px solid #C4975E;
+}
+
+.btn-outline-gold:hover,
+.btn-outline-gold:focus {
+  background-color: #C4975E;
+  color: #1A1A1A;
+  border-color: #C4975E;
+}
+
+/* ===================================
+   Boutons Jade (Succès)
+   =================================== */
+.btn-jade {
+  background-color: #4A7A66;
+  color: #E5E5E5;
+  border: none;
+  font-weight: 700;
+}
+
+.btn-jade:hover,
+.btn-jade:focus {
+  background-color: #3d6555;
+  color: #E5E5E5;
+}
+
+/* ===================================
+   Boutons Rouge (Danger)
+   =================================== */
+.btn-red {
+  background-color: #8B1E1E;
+  color: #E5E5E5;
+  border: none;
+  font-weight: 700;
+}
+
+.btn-red:hover,
+.btn-red:focus {
+  background-color: #6b1717;
+  color: #E5E5E5;
+}
+
+/* ===================================
+   Couleurs de fond
+   =================================== */
+.bg-dark-primary {
+  background-color: #1A1A1A !important;
+}
+
+.bg-dark-secondary {
+  background-color: #2E2E2E !important;
+}
+
+.bg-gold {
+  background-color: #C4975E !important;
+}
+
+.bg-jade {
+  background-color: #4A7A66 !important;
+}
+
+.bg-red {
+  background-color: #8B1E1E !important;
+}
+
+/* ===================================
+   Couleurs de texte
+   =================================== */
+.text-gold {
+  color: #C4975E !important;
+}
+
+.text-jade {
+  color: #4A7A66 !important;
+}
+
+.text-red {
+  color: #8B1E1E !important;
+}
+
+.text-light-primary {
+  color: #E5E5E5 !important;
+}
+
+.text-light-secondary {
+  color: #BFBFBF !important;
+}
+
+/* ===================================
+   Bordures
+   =================================== */
+.border-gold {
+  border-color: #C4975E !important;
+}
+
+.border-jade {
+  border-color: #4A7A66 !important;
+}
+
+.border-red {
+  border-color: #8B1E1E !important;
+}
+
+/* ===================================
+   Cards
+   =================================== */
+.card {
+  background-color: #2E2E2E;
+  border-color: rgba(196, 151, 94, 0.2);
+  color: #E5E5E5;
+}
+
+.card-header {
+  background-color: rgba(196, 151, 94, 0.1);
+  border-bottom-color: rgba(196, 151, 94, 0.2);
+}
+
+/* ===================================
+   Liens
+   =================================== */
+a {
+  color: #C4975E;
+}
+
+a:hover {
+  color: #8B1E1E;
+}
+
+/* ===================================
+   Formulaires
+   =================================== */
+.form-control,
+.form-select {
+  background-color: #2E2E2E;
+  border-color: rgba(196, 151, 94, 0.3);
+  color: #E5E5E5;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: #2E2E2E;
+  border-color: #C4975E;
+  color: #E5E5E5;
+  box-shadow: 0 0 0 0.25rem rgba(196, 151, 94, 0.25);
+}
+
+.form-control::placeholder {
+  color: #BFBFBF;
+}
+
+/* ===================================
+   Alertes
+   =================================== */
+.alert-gold {
+  background-color: rgba(196, 151, 94, 0.2);
+  color: #C4975E;
+  border-left: 4px solid #C4975E;
+  border: none;
+}
+
+.alert-jade {
+  background-color: rgba(74, 122, 102, 0.2);
+  color: #4A7A66;
+  border-left: 4px solid #4A7A66;
+  border: none;
+}
+
+.alert-red {
+  background-color: rgba(139, 30, 30, 0.2);
+  color: #8B1E1E;
+  border-left: 4px solid #8B1E1E;
+  border: none;
+}
+
+/* ===================================
+   Badges
+   =================================== */
+.badge-gold {
+  background-color: #C4975E;
+  color: #1A1A1A;
+}
+
+.badge-jade {
+  background-color: #4A7A66;
+  color: #E5E5E5;
+}
+
+.badge-red {
+  background-color: #8B1E1E;
+  color: #E5E5E5;
 }
