@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require '../php/Database.php';
+require '../php/imports.php';
 if (isset($_SESSION['user_id'])) {
     header('Location: ../index.php');
     exit();
@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p class="mb-0" style="color: #BFBFBF;">
                 Vous n'avez pas encore de compte ?
             </p>
-            <a href="register.php" class="text-link">
+            <a href="../register/index.php" class="text-link">
                 <i class="fas fa-user-plus"></i> Créer un compte
             </a>
         </div>
