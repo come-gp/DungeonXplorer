@@ -27,18 +27,5 @@
             <button class="btn-primary">Charger</button>
         </div>
     </div>
-    <h1 class="mx-auto text-center">Dungeon Explorer</h1>
-    <p class="mx-auto text-center">Bienvenue dans Dungeon Explorer, un jeu dont vous êtes<br>
-        le heros d'aventure palpitant où vous explorez des donjons mystérieux, combattez des monstres redoutables et <br>
-        découvrez des trésors cachés. Préparez-vous à vivre une expérience<br> inoubliable remplie d'action et de stratégie!</p>
-    <div> 
-        <button class="btn .btn-gold">Nouvelle Partie</button>
-    </div>
-    <div>
-        <button >Reprendre</button>
-    </div>
-    <div>
-        <button >Charger</button>
-    </div>
 </body>
 </html>
