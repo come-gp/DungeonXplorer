@@ -2,7 +2,7 @@
 
 // controllers/ChapterController.php
 
-require_once 'models/Chapter.php';
+require_once 'Chapter.php';
 
 class ChapterController
 {
