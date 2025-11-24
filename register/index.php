@@ -60,15 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 $success = 'Compte créé avec succès ! Vous pouvez maintenant vous connecter.';
                 
-                // Optionnel : connexion automatique
-                // $_SESSION['user_id'] = $db->lastInsertId();
-                // $_SESSION['pseudo'] = $pseudo;
-                // header('Location: index.php');
-                // exit();
             }
         } catch (dbException $e) {
             $error = 'Erreur lors de la création du compte. Veuillez réessayer.';
-            // En développement, pour déboguer : $error = $e->getMessage();
         }
     }
 }
@@ -83,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
