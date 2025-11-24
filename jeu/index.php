@@ -1,3 +1,21 @@
+<?php
+
+session_start();
+
+include '../php/imports.php';
+
+if (!isset($_SESSION['user_id'])){
+    header('Location: ../login/index.php');
+    exit();
+}
+
+
+
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
