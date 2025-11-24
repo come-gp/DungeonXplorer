@@ -1,0 +1,59 @@
+/* ===================================
+   DungeonXplorer - Bootstrap Color Override
+   =================================== */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Pirata+One&family=Roboto:wght@400;700&display=swap');
+
+/* ===================================
+   Variables Bootstrap Override
+   =================================== */
+:root {
+  /* Couleurs principales */
+  --bs-body-bg: #1A1A1A;
+  --bs-body-color: #E5E5E5;
+  --bs-secondary-bg: #2E2E2E;
+  --bs-secondary-color: #BFBFBF;
+  
+  /* Couleurs Bootstrap */
+  --bs-primary: #C4975E;
+  --bs-primary-rgb: 196, 151, 94;
+  --bs-secondary: #2E2E2E;
+  --bs-secondary-rgb: 46, 46, 46;
+  --bs-success: #4A7A66;
+  --bs-success-rgb: 74, 122, 102;
+  --bs-danger: #8B1E1E;
+  --bs-danger-rgb: 139, 30, 30;
+  --bs-warning: #C4975E;
+  --bs-warning-rgb: 196, 151, 94;
+  --bs-info: #BFBFBF;
+  --bs-info-rgb: 191, 191, 191;
+  --bs-light: #E5E5E5;
+  --bs-light-rgb: 229, 229, 229;
+  --bs-dark: #1A1A1A;
+  --bs-dark-rgb: 26, 26, 26;
+  
+  /* Liens */
+  --bs-link-color: #C4975E;
+  --bs-link-hover-color: #8B1E1E;
+  
+  /* Bordures */
+  --bs-border-color: rgba(196, 151, 94, 0.2);
+  
+  /* Polices */
+  --bs-body-font-family: 'Roboto', sans-serif;
+  --bs-heading-font-family: 'Pirata One', cursive;
+}
+
+/* ===================================
+   Styles de base
+   =================================== */
+body {
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--bs-heading-font-family);
+}
