@@ -3,8 +3,10 @@ session_start();
 
 include '../php/imports.php';
 
-// Vérifier que l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
+    echo"<script language=\"javascript\">";
+    echo"alert('non connecté, redirection vers login');";
+    echo"</script>";
     header('Location: ../login/');
     exit();
 }
@@ -21,13 +23,11 @@ try {
 $error = '';
 $success = '';
 
-// Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $heroName = trim($_POST['hero_name'] ?? '');
     $classId = (int)($_POST['class_id'] ?? 0);
     $biography = trim($_POST['biography'] ?? '');
     
-    // Validation
     if (empty($heroName)) {
         $error = 'Le nom du héros est requis.';
     } elseif (strlen($heroName) < 3) {
@@ -36,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Veuillez sélectionner une classe.';
     } else {
         try {
-            // Récupérer les stats de base de la classe
             $stmt = $pdo->prepare('SELECT * FROM class WHERE id = ?');
             $stmt->execute([$classId]);
             $selectedClass = $stmt->fetch();
@@ -44,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!$selectedClass) {
                 $error = 'Classe invalide.';
             } else {
-                // Créer le héros
                 $stmt = $pdo->prepare('
                     INSERT INTO hero (name, class_id, biography, pv, mana, strength, initiative, xp, current_level)
                     VALUES (?, ?, ?, ?, ?, ?, ?, 0, 1)
@@ -62,15 +60,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 $heroId = $pdo->lastInsertId();
                 
-                // Lier le héros à l'utilisateur
                 $stmt = $pdo->prepare('
                     INSERT INTO appartenir (id_user, id_hero, derniere_utilisation)
                     VALUES (?, ?, NOW())
                 ');
                 $stmt->execute([$_SESSION['user_id'], $heroId]);
                 
-                // Redirection vers le jeu
-                header('Location: ../jeu.php');
+                header('Location: ../jeu/');
                 exit();
             }
         } catch (PDOException $e) {
@@ -105,7 +101,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <form method="POST" action="">
                 
-                <!-- Nom du héros -->
                 <div class="form-group">
                     <label for="hero_name">Nom du héros</label>
                     <input 
@@ -120,7 +115,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <small>Minimum 3 caractères</small>
                 </div>
                 
-                <!-- Choix de la classe -->
                 <div class="form-group">
                     <label>Choisissez votre classe</label>
                     
@@ -155,7 +149,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endforeach; ?>
                 </div>
                 
-                <!-- Biographie (optionnel) -->
                 <div class="form-group">
                     <label for="biography">Biographie (optionnel)</label>
                     <textarea 
@@ -166,7 +159,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ><?= htmlspecialchars($biography ?? '') ?></textarea>
                 </div>
                 
-                <!-- Boutons -->
                 <div class="form-actions">
                     <button type="submit">Commencer l'aventure</button>
                     <a href="../index.php">Retour</a>
@@ -176,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </main>
         
         <footer>
-            <p>&copy; 2024 DungeonXplorer - Les Aventuriers du Val Perdu</p>
+            <p>&copy; 2024 DungeonXplorer - Team Maxence Langlois</p>
         </footer>
     </div>
 </body>
