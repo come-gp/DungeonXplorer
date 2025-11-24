@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 */
 
-require_once '../php/exemples/Database.php';
+require_once '../php/Database.php';
 
 $user_id = $_SESSION['user_id'];
 $success_message = '';
