@@ -16,7 +16,7 @@ try {
     $stmt = $db->query('SELECT * FROM class');
     $classes = $stmt->fetchAll();
     
-} catch (PDOException $e) {
+} catch (dbException $e) {
     die('Erreur de connexion : ' . $e->getMessage());
 }
 
@@ -36,14 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Veuillez sélectionner une classe.';
     } else {
         try {
-            $stmt = $pdo->prepare('SELECT * FROM class WHERE id = ?');
+            $stmt = $db->prepare('SELECT * FROM class WHERE id = ?');
             $stmt->execute([$classId]);
             $selectedClass = $stmt->fetch();
             
             if (!$selectedClass) {
                 $error = 'Classe invalide.';
             } else {
-                $stmt = $pdo->prepare('
+                $stmt = $db->prepare('
                     INSERT INTO hero (name, class_id, biography, pv, mana, strength, initiative, xp, current_level)
                     VALUES (?, ?, ?, ?, ?, ?, ?, 0, 1)
                 ');
@@ -58,9 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $selectedClass['initiative']
                 ]);
                 
-                $heroId = $pdo->lastInsertId();
+                $heroId = $db->lastInsertId();
                 
-                $stmt = $pdo->prepare('
+                $stmt = $db->prepare('
                     INSERT INTO appartenir (id_user, id_hero, derniere_utilisation)
                     VALUES (?, ?, NOW())
                 ');
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header('Location: ../jeu/');
                 exit();
             }
-        } catch (PDOException $e) {
+        } catch (dbException $e) {
             $error = 'Erreur lors de la création du héros.';
         }
     }
