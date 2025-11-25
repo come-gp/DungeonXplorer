@@ -168,6 +168,10 @@ try {
         .navbar-brand {
             font-family: 'Pirata One', cursive;
         }
+
+        .card-body{
+            background-color: #E5E5E5;
+        }
     </style>
 </head>
 <body>
@@ -243,7 +247,7 @@ try {
                             <i class="bi bi-person-plus display-1 text-muted"></i>
                             <h3 class="mt-3">Aucun héros pour le moment</h3>
                             <p class="text-muted mb-4">Créez votre premier héros et commencez votre aventure !</p>
-                            <a href="../game/create-hero.php" class="btn btn-primary btn-lg">
+                            <a href="../new-game/index.php" class="btn btn-primary btn-lg">
                                 <i class="bi bi-plus-circle"></i> Créer un héros
                             </a>
                         </div>
@@ -256,14 +260,13 @@ try {
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-start mb-3">
                                             <div>
-                                                <h5 class="card-title mb-1">
-                                                    <i class="bi bi-person-badge-fill text-primary"></i>
+                                                <h5 class="card-title mb-1 d-flex align-items-center">
                                                     <?php echo htmlspecialchars($hero['hero_name']); ?>
                                                     <span class="badge level-badge text-white ms-2">
-                                                        Niv. <?php echo $hero['current_level']; ?>
+                                                        Niv. <?php echo $hero['current_level']; ?>  
                                                     </span>
                                                 </h5>
-                                                <p class="text-muted small mb-0">
+                                                <p class="text-muted small mb-0 mt-1">
                                                     <i class="bi bi-shield-fill"></i>
                                                     <?php echo $hero['class_name'] ? htmlspecialchars($hero['class_name']) : 'Sans classe'; ?>
                                                 </p>
@@ -273,7 +276,7 @@ try {
                                         <div class="row g-2 mb-3">
                                             <div class="col-6 col-md-3">
                                                 <div class="d-flex align-items-center gap-2">
-                                                    <div class="stat-icon bg-danger bg-opacity-25 text-danger">
+                                                    <div class="stat-icon bg-opacity-25 text-danger">
                                                         <i class="bi bi-heart-fill"></i>
                                                     </div>
                                                     <div>
