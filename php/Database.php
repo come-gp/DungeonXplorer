@@ -3,7 +3,7 @@
 // core/Database.php
 
 // Chemin vers le fichier .env
-$envFile = '../.env';
+$envFile = $_SERVER['DOCUMENT_ROOT'] . '/.env';
 
 // Vérification de l'existence du fichier .env
 if (!file_exists($envFile)) {
@@ -28,3 +28,5 @@ try {
     echo "Erreur de connexion à la base de données : " . $e->getMessage();
     exit;
 }
+
+?>
