@@ -1,8 +1,8 @@
 <?php
 session_start();
+require 'php/imports.php';
 
 $isLoggedIn = isset($_SESSION['user_id']);
-$username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 ?>
 
 <!DOCTYPE html>
@@ -17,7 +17,7 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 </head>
 <body>
     <header class="d-flex justify-content-end p-3">
-        <a class="text-link" href="login">Se Connecter</a>
+        <a class="text-link" href="login/index.php">Se Connecter</a>
     </header>
     <div class="main-container">
         <h1 class="mx-auto text-center">Dungeon Explorer</h1>
