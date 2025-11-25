@@ -3,15 +3,9 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    $_SESSION['user_id'] = 1;
-}
-
-/*
-if (!isset($_SESSION['user_id'])) {
     header('Location: ../login/login.php');
     exit;
 }
-*/
 
 require_once '../php/Database.php';
 
@@ -33,11 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         if (!password_verify($current_password, $user_data['password'])) {
             $error_message = "Le mot de passe actuel est incorrect.";
         } 
-
         elseif (empty($new_pseudo) || strlen($new_pseudo) < 3) {
             $error_message = "Le pseudo doit contenir au moins 3 caractères.";
         }
-
         elseif (!empty($new_password)) {
             if (strlen($new_password) < 6) {
                 $error_message = "Le nouveau mot de passe doit contenir au moins 6 caractères.";
@@ -65,18 +57,16 @@ try {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$user) {
-        $stmt = $db->prepare("INSERT INTO user (id, pseudo, password) VALUES (1, 'Utilisateur Test', ?)");
-        $stmt->execute([password_hash('test123', PASSWORD_DEFAULT)]);
-        
-        $stmt = $db->prepare("SELECT id, pseudo FROM user WHERE id = ?");
-        $stmt->execute([$user_id]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        session_destroy();
+        header('Location: ../login/login.php');
+        exit;
     }
 
     $stmt = $db->prepare("SELECT COUNT(*) as total FROM appartenir WHERE id_user = ?");
     $stmt->execute([$user_id]);
     $hero_count = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
+    // Récupération de tous les héros avec leurs informations
     $stmt = $db->prepare("
         SELECT 
             h.id,
@@ -128,17 +118,13 @@ try {
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../style.css">
     
     <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
         .profile-avatar {
             width: 100%;
             aspect-ratio: 1;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #C4975E 0%, #8B1E1E 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -153,11 +139,11 @@ try {
 
         .party-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 16px rgba(196, 151, 94, 0.3);
         }
 
         .level-badge {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #C4975E 0%, #8B1E1E 100%);
         }
 
         .stat-icon {
@@ -173,6 +159,14 @@ try {
         .sticky-sidebar {
             position: sticky;
             top: 20px;
+        }
+
+        .navbar {
+            border-bottom: 2px solid #C4975E;
+        }
+
+        .navbar-brand {
+            font-family: 'Pirata One', cursive;
         }
     </style>
 </head>
@@ -203,7 +197,7 @@ try {
                             <button class="btn btn-primary w-100 mb-2" data-bs-toggle="modal" data-bs-target="#editModal">
                                 <i class="bi bi-pencil-square"></i> Modifier le profil
                             </button>
-                            <a href="logout.php" class="btn btn-danger w-100">
+                            <a href="../logout.php" class="btn btn-danger w-100">
                                 <i class="bi bi-box-arrow-right"></i> Déconnexion
                             </a>
                         </div>
