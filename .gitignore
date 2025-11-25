@@ -1,3 +1,4 @@
 # Ignorer le dossier contenant les images
 imgs/
 
+.env
