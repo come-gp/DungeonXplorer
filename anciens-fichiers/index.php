@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 require 'php/imports.php';
 
 $isLoggedIn = isset($_SESSION['user_id']);
@@ -31,7 +31,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
             <button class="btn-primary">Charger</button>
             <?php else : ?>
                 <a href="register/index.php"><button class="btn-primary">S'inscrire</button></a>
-                <a href="login/index.php"><button class="btn-primary">Se Connecter</button></a>
+                <a href="<?php $loginPath; ?>"><button class="btn-primary">Se Connecter</button></a>
             <?php endif; ?>
         </div>
     </div>

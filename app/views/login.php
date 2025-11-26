@@ -1,42 +1,45 @@
 <?php
-session_start();
-
-require '../php/imports.php';
-if (isset($_SESSION['user_id'])) {
-    header('Location: ../index.php');
-    exit();
-}
-
-$error = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $pseudo = trim($_POST['pseudo'] ?? '');
-    $password = $_POST['password'] ?? '';
-    
-    if (empty($pseudo) || empty($password)) {
-        $error = 'Veuillez remplir tous les champs.';
-    } else {
-        try {
-            
-            $stmt = $db->prepare('SELECT id, pseudo, password FROM user WHERE pseudo = :pseudo');
-            $stmt->execute(['pseudo' => $pseudo]);
-            $user = $stmt->fetch();
-            
-            if ($user && password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['pseudo'] = $user['pseudo'];
-                
-                header('Location: ../index.php');
-                exit();
-            } else {
-                $error = 'Identifiants incorrects.';
-            }
-        } catch (dbException $e) {
-            $error = 'Erreur de connexion. Veuillez réessayer.';
-        }
-    }
-}
+// app/Views/login.php
+// variables disponibles : $error, $pseudo
 ?>
+<!-- <!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Connexion - DungeonXplorer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container mt-5" style="max-width: 420px;">
+    <h2 class="mb-4 text-center">Connexion</h2>
+
+    <?php if (!empty($error)): ?>
+      <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+    <?php endif; ?>
+
+    <form method="POST" action="/login">
+      <div class="mb-3">
+        <label for="pseudo" class="form-label">Pseudo</label>
+        <input id="pseudo" name="pseudo" type="text" class="form-control" value="<?= htmlspecialchars($pseudo ?? '') ?>" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Mot de passe</label>
+        <input id="password" name="password" type="password" class="form-control" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+    </form>
+
+    <div class="text-center mt-3">
+      <a href="/register">Créer un compte</a>
+    </div>
+  </div>
+</body>
+</html> -->
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -48,7 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <link rel="stylesheet" href="../public/css/login.css">
+
 </head>
 <body>
     <div class="login-container">
@@ -57,6 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         
         <h2 class="text-center mb-4">Connexion</h2>
+
+        <!-- <?php echo $_SESSION['login_error'] ?> -->
         
         <?php if ($error): ?>
             <div class="alert alert-danger" role="alert">
