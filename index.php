@@ -17,7 +17,11 @@ $isLoggedIn = isset($_SESSION['user_id']);
 </head>
 <body>
     <header class="d-flex justify-content-end p-3">
+    <?php if (!$isLoggedIn) : ?>
         <a class="text-link" href="login/index.php">Se Connecter</a>
+        <?php else : ?>
+        <a class="text-link" href=" profile/index.php">Mon Profile</a>
+        <?php endif; ?>
     </header>
     <div class="main-container">
         <h1 class="mx-auto text-center">Dungeon Explorer</h1>
@@ -25,7 +29,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
             le heros d'aventure palpitant<br> où vous explorez des donjons mystérieux, combattez des monstres redoutables et
             découvrez des trésors cachés.<br> Préparez-vous à vivre une expérience inoubliable remplie d'action et de stratégie!</p>
         <div class=" d-flex flex-column align-items-center ">
-            <?php if (!$isLoggedIn) : ?>
+            <?php if ($isLoggedIn) : ?>
             <a href="new-game/index.php"><button class="btn-primary" href>Nouvelle Partie</button></a>
             <button class="btn-primary">Reprendre</button>
             <button class="btn-primary">Charger</button>
