@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ');
                 $stmt->execute([$_SESSION['user_id'], $heroId]);
                 
-                header('Location: ../jeu/');
+                header('Location: ../game/');
                 exit();
             }
         } catch (dbException $e) {
@@ -81,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Création de personnage - DungeonXplorer</title>
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
     <div class="container">
