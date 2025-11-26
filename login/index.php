@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 require '../php/imports.php';
 if (isset($_SESSION['user_id'])) {
