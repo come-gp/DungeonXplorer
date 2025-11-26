@@ -1,12 +1,14 @@
 <?php
-session_start();
+require '../php/imports.php';
+
 
 if (!isset($_SESSION['user_id'])) {
+    
     header('Location: ../login/');
     exit();
 }
 
-require '../php/imports.php';
+
 
 // recup le hero du joureur
 
@@ -126,18 +128,18 @@ $inCombat = $encounter ? true : false;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DungeonXplorer - Aventure</title>
-
+    <!-- <link rel="stylesheet" href="style.css"> -->
     
 </head>
 <body>
-    <header>
+    <!-- <header>
         <h1>DungeonXplorer</h1>
         <nav>
             <a href="../index.php">Accueil</a>
             <a href="../profil.php">Profil</a>
             <a href="../php/logout.php">Déconnexion</a>
         </nav>
-    </header>
+    </header> -->
     
     <main>
         <p>stat hero </p>
