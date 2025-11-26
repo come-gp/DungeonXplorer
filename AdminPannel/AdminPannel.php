@@ -14,13 +14,82 @@ function deleteFromTable($table,$col, $id) {
     $stmt = $db->prepare('DELETE FROM ' . $table . ' WHERE ' . $col . ' = ' . intval($id).';');
     $stmt->execute();
 }
-
-//delete, modifier, ajouter des utilisateurs
-//delete, modifier, ajouter des chapitres
-//delete, modifier, ajouter des monstres
-//delete, modifier, ajouter des items
-//delete, modifier, ajouter des classes
-//delete, modifier, ajouter des niveau (xp) selon classes
+function deleteUser($id) {
+    $stmt = $db->prepare('SELECT hero_id FROM links WHERE next_chapter_id='.$id.';');
+    $stmt->execute();
+    $row = $stmt->fetchall(PDO::FETCH_ASSOC);
+    foreach ($row as $hero) {
+        deleteHero($hero['hero_id']);
+    }
+    deleteFromTable('appartenir', 'id_hero', $id);
+    deleteFromTable('user', 'id', $id);
+}
+function deleteChapter($id) {
+    global $db;
+    try{
+        $stmt = $db->prepare(
+        'UPDATE hero_progress SET chapter_id=(
+        SELECT chapter_id FROM links WHERE next_chapter_id='.$id.'
+        )
+        WHERE chapter_id='.$id.';');
+        $stmt->execute();
+    } catch (Exception $e) {
+        echo "<script>alert('Le chapitre n'a pas de chapitre précédent ou n'est pas lié correctement.');</script>";
+        $stmt = $db->prepare(
+        'UPDATE hero_progress SET chapter_id=(
+        SELECT chapter_id FROM links WHERE chapter_id not in (SELECT next_chapter_id FROM links) AND chapter_id != '.$id.'
+        )
+        WHERE chapter_id='.$id.';');
+        $stmt->execute();
+        //si le chapitre n'a pas de chapitre précédent, on le remplace par un chapitre qui n'est pas lié comme suivant(probablement un debut de jeu) 
+        //Probleme si il n'y a aucun chapitre non lié
+    }
+    deleteFromTable('chapter_treasure', 'chapter_id', $id);
+    deleteFromTable('encounter', 'chapter_id', $id);
+    deleteFromTable('links', 'chapter_id', $id);
+    deleteFromTable('links', 'next_chapter_id', $id);
+    deleteFromTable('chapter', 'id', $id);
+}
+function deleteMonster($id) {
+    deleteFromTable('monster_loot', 'monster_id', $id);
+    deleteFromTable('encounter', 'monster_id', $id);
+    deleteFromTable('monster', 'id', $id);
+}
+function deleteItem($id) {
+    //mets à null les références aux items dans la table hero
+    $stmt = $db->prepare('UPDATE hero SET 
+    armor_item_id = CASE WHEN armor_item_id = '.$id.' THEN NULL ELSE armor_item_id END,
+    primary_weapon_item_id = CASE WHEN primary_weapon_item_id = '.$id.' THEN NULL ELSE primary_weapon_item_id END,
+    secondary_weapon_item_id = CASE WHEN secondary_weapon_item_id = '.$id.' THEN NULL ELSE secondary_weapon_item_id END,
+    shield_item_id = CASE WHEN shield_item_id = '.$id.' THEN NULL ELSE shield_item_id END;');
+    $stmt->execute();
+    deleteFromTable('monster_loot', 'item_id', $id);
+    deleteFromTable('chapter_treasure', 'item_id', $id);
+    deleteFromTable('inventory', 'item_id', $id);
+    deleteFromTable('items', 'id', $id);
+}
+function deleteHero($id) {
+    deleteFromTable('inventory', 'hero_id', $id);
+    deleteFromTable('hero_progress', 'hero_id', $id);
+    deleteFromTable('hero', 'id', $id);
+}
+function deleteClass($id) {
+    deleteFromTable('level', 'class_id', $id);
+    global $db;
+    $stmt = $db->prepare('SELECT id FROM hero WHERE class_id = ' . intval($id) . ';');
+    $stmt->execute();
+    $row = $stmt->fetchall(PDO::FETCH_ASSOC);
+    foreach ($row as $class) {
+        deleteHero($class['id']);
+    }
+    deleteFromTable('class', 'id', $id);
+}
+// modifier, ajouter des utilisateurs
+// modifier, ajouter des chapitres
+// modifier, ajouter des monstres
+// modifier, ajouter des items
+// modifier, ajouter des classes
+// modifier, ajouter des niveau (xp) selon classes
 ?>
 
 <!DOCTYPE html>
@@ -49,28 +118,32 @@ function deleteFromTable($table,$col, $id) {
             <form method="POST">
                 <select class="form-select mb-3"name="choix" onchange="this.form.submit()">
                     <option value="">selectionnez une option</option>
-                    <option value="users">Utilisateurs</option>
-                    <option value="chapters">Chapitres</option>
-                    <option value="monsters">Monstres</option>
-                    <option value="items">Objets</option>
-                    <option value="class">Classes</option>
-                    <option value="level">Niveaux</option>
+                    <option value="users"<?php if (!empty($_POST['choix']) && $_POST['choix'] === 'users') echo ' selected'; ?>>Utilisateurs</option>
+                    <option value="chapters"<?php if (!empty($_POST['choix']) && $_POST['choix'] === 'chapters') echo ' selected'; ?>>Chapitres</option>
+                    <option value="monsters"<?php if (!empty($_POST['choix']) && $_POST['choix'] === 'monsters') echo ' selected'; ?>>Monstres</option>
+                    <option value="items"<?php if (!empty($_POST['choix']) && $_POST['choix'] === 'items') echo ' selected'; ?>>Objets</option>
+                    <option value="class"<?php if (!empty($_POST['choix']) && $_POST['choix'] === 'class') echo ' selected'; ?>>Classes</option>
+                    <option value="level"<?php if (!empty($_POST['choix']) && $_POST['choix'] === 'level') echo ' selected'; ?>>Niveaux</option>
                 </select>
             </form>
             <div class="row mb-3">
                 <div class="col"></div>
-                <div class="col-6">
+                <div class="col-6 mb-3">
                     <?php
-                    if (!empty($_POST['choix'])) {
-                        if ($_POST['choix'] === 'users') {
+                    if (!empty($_POST['choix'])){
+                        switch($_POST['choix']){
+                            case 'users':
                             $stmt = $db->prepare('SELECT id, pseudo FROM user');
                             $stmt->execute();
                             $row = $stmt->fetchall(PDO::FETCH_ASSOC);
-                            echo '<ul class="list-group">';
+                            echo '<a href="CreerUser.php" class="btn btn-primary mb-3">Ajouter un utilisateur</a>
+                            <ul class="list-group">';
                             foreach ($row as $user) {
                                 echo '
-                                <li class="list-group-item align-items-center text-center">id: '
-                                    .$user['id'].', pseudo: '.$user['pseudo'].'<br>
+                                <li class="list-group-item align-items-center text-center">
+                                    id: '.$user['id'].
+                                    ', pseudo: '.$user['pseudo'].
+                                    '<br>
                                     <form method="POST">
                                         <button type="submit" name="BouttonSupprimerUser" value="'.$user['id'].'" class="btn btn-danger">supprimer</button>
                                         <button type="submit" name="BouttonModifierUser" class="btn btn-success">modifier</button>
@@ -78,15 +151,20 @@ function deleteFromTable($table,$col, $id) {
                                 </li>';
                             }
                             echo "</ul>";
-                        } elseif ($_POST['choix'] === 'chapters') {
+                            break;
+                        case 'chapters':
                             $stmt = $db->prepare('SELECT id,title,content FROM chapter');
                             $stmt->execute();
                             $row = $stmt->fetchall(PDO::FETCH_ASSOC);
-                            echo '<ul class="list-group">';
+                            echo '<a href="CreerChapter.php" class="btn btn-primary mb-3">Ajouter un chapitre</a>
+                            <ul class="list-group">';
                             foreach ($row as $chapter) {
                                 echo '
-                                <li class="list-group-item align-items-center text-center">id: '
-                                    .$chapter['id'].', titre: '.$chapter['title'].', contenu: '.$chapter['content'].'<br>
+                                <li class="list-group-item align-items-center text-center">
+                                id: '.$chapter['id'].
+                                ', titre: '.$chapter['title'].
+                                ', contenu: '.$chapter['content'].
+                                '<br>
                                     <form method="POST">
                                         <button type="submit" name="BouttonSupprimerChapter" value="'.$chapter['id'].'" class="btn btn-danger">supprimer</button>
                                         <button type="submit" name="BouttonModifierChapter" class="btn btn-success">modifier</button>
@@ -94,11 +172,13 @@ function deleteFromTable($table,$col, $id) {
                                 </li>';
                             }
                             echo "</ul>";
-                        } elseif ($_POST['choix'] === 'monsters') {
+                            break;
+                        case 'monsters':
                             $stmt = $db->prepare('SELECT id,name,pv,mana,initiative,strength,attack,xp FROM monster');
                             $stmt->execute();
                             $row = $stmt->fetchall(PDO::FETCH_ASSOC);
-                            echo '<ul class="list-group">';
+                            echo '<a href="CreerMonster.php" class="btn btn-primary mb-3">Ajouter un monstre</a>
+                            <ul class="list-group">';
                             foreach ($row as $monster) {
                                 echo '
                                 <li class="list-group-item align-items-center text-center">id: '
@@ -110,15 +190,21 @@ function deleteFromTable($table,$col, $id) {
                                 </li>';
                             }
                             echo "</ul>";
-                        } elseif ($_POST['choix'] === 'items') {
+                            break;
+                        case 'items':
                             $stmt = $db->prepare('SELECT id,name,description,item_type FROM items');
                             $stmt->execute();
                             $row = $stmt->fetchall(PDO::FETCH_ASSOC);
-                            echo '<ul class="list-group">';
+                            echo '<a href="CreerItem.php" class="btn btn-primary mb-3">Ajouter un item</a>
+                            <ul class="list-group">';
                             foreach ($row as $item) {
                                 echo '
-                                <li class="list-group-item align-items-center text-center">id: '
-                                    .$item['id'].', nom: '.$item['name'].', description: '.$item['description'].', type: '.$item['item_type'].'<br>
+                                <li class="list-group-item align-items-center text-center">
+                                id: '.$item['id'].
+                                ', nom: '.$item['name'].
+                                ', description: '.$item['description'].
+                                ', type: '.$item['item_type'].
+                                '<br>
                                     <form method="POST">
                                         <button type="submit" name="BouttonSupprimerItem" value="'.$item['id'].'" class="btn btn-danger">supprimer</button>
                                         <button type="submit" name="BouttonModifierItem" class="btn btn-success">modifier</button>
@@ -126,15 +212,25 @@ function deleteFromTable($table,$col, $id) {
                                 </li>';
                             }
                             echo "</ul>";
-                        } elseif ($_POST['choix'] === 'class') {
+                            break;
+                        case 'class':
                             $stmt = $db->prepare('SELECT id, name, description, base_pv, base_mana, strength, initiative, max_items FROM class');
                             $stmt->execute();
                             $row = $stmt->fetchall(PDO::FETCH_ASSOC);
-                            echo '<ul class="list-group">';
+                            echo '<a href="CreerClass.php" class="btn btn-primary mb-3">Ajouter une classe</a>
+                            <ul class="list-group">';
                             foreach ($row as $class) {
                                 echo '
-                                <li class="list-group-item align-items-center text-center">id: '
-                                    .$class['id'].', nom: '.$class['name'].', description: '.$class['description'].', base_pv: '.$class['base_pv'].', base_mana: '.$class['base_mana'].', strength: '.$class['strength'].', initiative: '.$class['initiative'].', max_items: '.$class['max_items'].'<br>
+                                <li class="list-group-item align-items-center text-center">
+                                id: '.$class['id'].
+                                    ', nom: '.$class['name'].
+                                    ', description: '.$class['description'].
+                                    ', base_pv: '.$class['base_pv'].
+                                    ', base_mana: '.$class['base_mana'].
+                                    ', strength: '.$class['strength'].
+                                    ', initiative: '.$class['initiative'].
+                                    ', max_items: '.$class['max_items'].
+                                    '<br>
                                     <form method="POST">
                                         <button type="submit" name="BouttonSupprimerClass" value="'.$class['id'].'" class="btn btn-danger">supprimer</button>
                                         <button type="submit" name="BouttonModifierClass" class="btn btn-success">modifier</button>
@@ -142,15 +238,25 @@ function deleteFromTable($table,$col, $id) {
                                 </li>';
                             }
                             echo "</ul>";
-                        } elseif ($_POST['choix'] === 'level') {
+                            break;
+                        case 'level':
                             $stmt = $db->prepare('SELECT id, class_id, level, required_xp, pv_bonus, mana_bonus, strength_bonus, initiative_bonus FROM level');
                             $stmt->execute();
                             $row = $stmt->fetchall(PDO::FETCH_ASSOC);
-                            echo '<ul class="list-group">';
+                            echo '<a href="CreerLevel.php" class="btn btn-primary mb-3">Ajouter un niveau</a>
+                            <ul class="list-group">';
                             foreach ($row as $level) {
                                 echo '
-                                <li class="list-group-item align-items-center text-center">id: '
-                                    .$level['id'].', class_id: '.$level['class_id'].', level: '.$level['level'].', required_xp: '.$level['required_xp'].', pv_bonus: '.$level['pv_bonus'].', mana_bonus: '.$level['mana_bonus'].', strength_bonus: '.$level['strength_bonus'].', initiative_bonus: '.$level['initiative_bonus'].'<br>
+                                <li class="list-group-item align-items-center text-center">
+                                    id: '.$level['id'].
+                                    ', class_id: '.$level['class_id'].
+                                    ', level: '.$level['level'].
+                                    ', required_xp: '.$level['required_xp'].
+                                    ', pv_bonus: '.$level['pv_bonus'].
+                                    ', mana_bonus: '.$level['mana_bonus'].
+                                    ', strength_bonus: '.$level['strength_bonus'].
+                                    ', initiative_bonus: '.$level['initiative_bonus'].
+                                    '<br>
                                     <form method="POST">
                                         <button type="submit" name="BouttonSupprimerLevel" value="'.$level['id'].'" class="btn btn-danger">supprimer</button>
                                         <button type="submit" name="BouttonModifierLevel" class="btn btn-success">modifier</button>
@@ -158,28 +264,25 @@ function deleteFromTable($table,$col, $id) {
                                 </li>';
                             }
                             echo "</ul>";
+                            break;
                         }
                     }
-                    if(!empty($_POST['BouttonSupprimerUser'])){
-                        deleteFromTable('user', 'id', $_POST['BouttonSupprimerUser']);
+                     else if(!empty($_POST['BouttonSupprimerUser'])){
+                        deleteUser($_POST['BouttonSupprimerUser']);
                     }
-                    if(!empty($_POST['BouttonSupprimerChapter'])){
-                        deleteFromTable('chapter_treasure', 'chapter_id', $_POST['BouttonSupprimerChapter']);
-                        deleteFromTable('encounter', 'chapter_id', $_POST['BouttonSupprimerChapter']);
-                        deleteFromTable('links', 'chapter_id', $_POST['BouttonSupprimerChapter']);
-                        deleteFromTable('links', 'next_chapter_id', $_POST['BouttonSupprimerChapter']);
-                        deleteFromTable('chapter', 'id', $_POST['BouttonSupprimerChapter']);
+                    else if(!empty($_POST['BouttonSupprimerChapter'])){
+                        deleteChapter($_POST['BouttonSupprimerChapter']);
                     }
-                    if(!empty($_POST['BouttonSupprimerMonster'])){
-                        deleteFromTable('monster', 'id', $_POST['BouttonSupprimerMonster']);
+                    else if(!empty($_POST['BouttonSupprimerMonster'])){
+                        deleteMonster($_POST['BouttonSupprimerMonster']);
                     }
-                    if(!empty($_POST['BouttonSupprimerItem '])){
-                        deleteFromTable('items', 'id', $_POST['BouttonSupprimerItem']);
+                    else if(!empty($_POST['BouttonSupprimerItem '])){
+                        deleteItem($_POST['BouttonSupprimerItem']);
                     }
-                    if(!empty($_POST['BouttonSupprimerClass'])){
-                        deleteFromTable('class', 'id', $_POST['BouttonSupprimerClass']);
+                    else if(!empty($_POST['BouttonSupprimerClass'])){
+                        deleteClass($_POST['BouttonSupprimerClass']);
                     }
-                    if(!empty($_POST['BouttonSupprimerLevel'])){
+                    else if(!empty($_POST['BouttonSupprimerLevel'])){
                         deleteFromTable('level', 'id', $_POST['BouttonSupprimerLevel']);
                     }
                     ?>
