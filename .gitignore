@@ -1,4 +1,8 @@
 # Ignorer le dossier contenant les images
 imgs/
 
+<<<<<<< HEAD
 .env
+=======
+/vendor/
+>>>>>>> d97a9d8c1788acabe233e1c83829fa9353766ede
