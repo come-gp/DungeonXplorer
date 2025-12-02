@@ -9,7 +9,7 @@ use Bramus\Router\Router;
 use App\Controllers\LoginController;
 use App\Controllers\HomeController;
 use App\Controllers\RegisterController;
-
+use App\Controllers\NewGameController;
 
 $router = new Router();
 
@@ -51,6 +51,24 @@ $router->get('/', function() {
     $controller = new HomeController();
     $controller->index(); 
 });
+
+
+
+//new game
+
+// get
+$router->get('new-game', function() {
+    $controller = new NewGameController();
+    $controller->show();
+});
+
+//post
+$router->post('new-game', function() {
+    $controller = new NewGameController();
+    $controller->create();
+});
+
+
 
 // 404
 

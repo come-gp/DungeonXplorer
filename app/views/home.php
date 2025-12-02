@@ -1,6 +1,4 @@
-<?php
-/** @var bool $isLoggedIn */
-?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -31,8 +29,22 @@
 
         <div class="d-flex flex-column align-items-center">
 
+        <?php if ($error): ?>
+            <div class="alert alert-danger" role="alert">
+                <i class="fas fa-exclamation-triangle"></i> <?= htmlspecialchars($error) ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($success): ?>
+            <div class="alert alert-success" role="alert">
+                <i class="fas fa-check-circle"></i> <?= htmlspecialchars($success) ?>
+            </div>
+        <?php endif; ?>
+
+
+
             <?php if (!$isLoggedIn): ?>
-                <a href="/new-game"><button class="btn-primary">Nouvelle Partie</button></a>
+                <a href="<?= base_url('/new-game') ?>"><button class="btn-primary">Nouvelle Partie</button></a>
                 <button class="btn-primary">Reprendre</button>
                 <button class="btn-primary">Charger</button>
 

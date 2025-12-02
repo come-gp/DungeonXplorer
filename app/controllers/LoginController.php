@@ -1,6 +1,8 @@
 <?php
 namespace App\Controllers;
 
+session_start();
+
 use App\Models\UserModel;
 
 class LoginController
@@ -20,8 +22,8 @@ class LoginController
             exit();
         } 
 
-        $error = $_SESSION['login_error'] ?? '';
-        unset($_SESSION['login_error']);
+        $error = $_SESSION['error'] ?? '';
+        unset($_SESSION['error']);
 
         // Include la vue (chemin relatif à app/Views)
         require __DIR__ . '/../Views/login.php';
@@ -30,7 +32,6 @@ class LoginController
     // traitemenbnt du form
     public function login(): void
     {
-        
 
         $pseudo = trim($_POST['pseudo'] ?? '');
         $password = $_POST['password'] ?? '';
@@ -41,15 +42,16 @@ class LoginController
 
             if ($user && password_verify($password, $user['password'])) {
                 $_SESSION['user_id'] = $user['id'];
+                $_SESSION['success'] = 'connecté avec succès.';
                 header('Location: ' . base_url('/'));
                 exit();
             } else {
-                $_SESSION['login_error'] = 'Identifiants incorrects.';
+                $_SESSION['error'] = 'Identifiants incorrects.';
                 header('Location:'  . base_url('/login'));
                 exit();
             }
         } catch (\PDOException $e) {
-            $_SESSION['login_error'] = 'Erreur de connexion. Veuillez réessayer.';
+            $_SESSION['error'] = 'Erreur de connexion. Veuillez réessayer.';
             header('Location: ' . base_url('/login'));
             exit();
         }

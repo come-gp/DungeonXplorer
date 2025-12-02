@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Models\UserModel;
 
+session_start();
+
 class RegisterController{
 
     private UserModel $userModel;
