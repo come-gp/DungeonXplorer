@@ -16,7 +16,7 @@
 </head>
 <body>
     <header class="d-flex justify-content-end p-3">
-        <a class="text-link" href="/login">Se Connecter</a>
+        <a class="text-link" href="<?= base_url('/login') ?>">Se Connecter</a>
     </header>
 
     <div class="main-container">

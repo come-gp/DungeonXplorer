@@ -112,7 +112,7 @@
             <p class="mb-0" style="color: #BFBFBF;">
                 Vous n'avez pas encore de compte ?
             </p>
-            <a href="../register/index.php" class="text-link">
+            <a href="<?= base_url('/register') ?>" class="text-link">
                 <i class="fas fa-user-plus"></i> Créer un compte
             </a>
         </div>
