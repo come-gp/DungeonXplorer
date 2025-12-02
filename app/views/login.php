@@ -63,7 +63,7 @@
         
         <h2 class="text-center mb-4">Connexion</h2>
 
-        <!-- <?php echo $_SESSION['login_error'] ?> -->
+        <!-- <?php echo $_SESSION['error'] ?> -->
         
         <?php if ($error): ?>
             <div class="alert alert-danger" role="alert">
