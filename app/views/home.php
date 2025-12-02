@@ -16,7 +16,7 @@
 </head>
 <body>
     <header class="d-flex justify-content-end p-3">
-        <a class="text-link" href="/login">Se Connecter</a>
+        <a class="text-link" href="<?= base_url('/login') ?>">Se Connecter</a>
     </header>
 
     <div class="main-container">
@@ -43,7 +43,7 @@
 
 
 
-            <?php if (!$isLoggedIn): ?>
+            <?php if ($isLoggedIn): ?>
                 <a href="<?= base_url('/new-game') ?>"><button class="btn-primary">Nouvelle Partie</button></a>
                 <button class="btn-primary">Reprendre</button>
                 <button class="btn-primary">Charger</button>
