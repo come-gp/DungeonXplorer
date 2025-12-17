@@ -14,7 +14,7 @@ class UserModel
 
     public function getUserByPseudo(string $pseudo): ?array
     {
-        $stmt = $this->db->prepare('SELECT id, pseudo, password FROM user WHERE pseudo = :pseudo');
+        $stmt = $this->db->prepare('SELECT id, pseudo, password, is_admin FROM user WHERE pseudo = :pseudo');
         $stmt->execute(['pseudo' => $pseudo]);
         $user = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $user ?: null;

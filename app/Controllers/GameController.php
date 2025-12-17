@@ -5,7 +5,7 @@ session_start();
 
 use App\Models\UserModel;
 
-class RegisterController{
+class GameController{
 
     private UserModel $userModel;
 
