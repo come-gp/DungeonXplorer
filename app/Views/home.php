@@ -43,6 +43,8 @@
             </div>
         <?php endif; ?>
 
+        <?php echo 'user_id = . ' . $_SESSION['user_id'] ?>
+
 
 
             <?php if (!$isLoggedIn): ?>

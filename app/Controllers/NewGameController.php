@@ -113,7 +113,7 @@ class NewGameController
             exit();
 
         } catch (\PDOException $e) {
-            $_SESSION['newgame_error'] = 'Erreur lors de la création du héros. Veuillez réessayer.';
+            $_SESSION['error'] = 'Erreur lors de la création du héros. Veuillez réessayer.';
             $_SESSION['form_hero_name'] = $heroName;
             $_SESSION['form_biography'] = $biography;
             header('Location: ' . base_url('/new-game'));

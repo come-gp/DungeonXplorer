@@ -10,18 +10,27 @@
     <div class="container">
         <header>
             <h1>DungeonXplorer</h1>
-            <p>Bienvenue <?= htmlspecialchars($_SESSION['pseudo']) ?></p>
+            <p>Bienvenue <?= htmlspecialchars($_SESSION['user_id']) ?></p>
             <a href="../logout.php">Déconnexion</a>
         </header>
         
         <main>
-            <h2>Création de votre héros</h2>
-            
-            <?php if ($error): ?>
-                <div class="error">
-                    <?= htmlspecialchars($error) ?>
+
+             <?php if ($error): ?>
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-exclamation-triangle"></i> <?= htmlspecialchars($error) ?>
                 </div>
             <?php endif; ?>
+
+            <?php if ($success): ?>
+                <div class="alert alert-success" role="alert">
+                    <i class="fas fa-check-circle"></i> <?= htmlspecialchars($success) ?>
+                </div>
+            <?php endif; ?>
+
+            <h2>Création de votre héros</h2>
+            
+           
             
             <form method="POST" action="<?= base_url('/new-game') ?>">
                 
