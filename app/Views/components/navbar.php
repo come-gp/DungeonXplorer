@@ -44,9 +44,6 @@ $isAdmin = $_SESSION['is_admin'] ?? false;
                             <li><a class="dropdown-item" href="<?= base_url('/profile') ?>">
                                 <i class="fas fa-user"></i> Mon Profil
                             </a></li>
-                            <li><a class="dropdown-item" href="<?= base_url('/profile/settings') ?>">
-                                <i class="fas fa-cog"></i> Paramètres
-                            </a></li>
                             
                             <?php if ($isAdmin): ?>
                                 <li><hr class="dropdown-divider"></li>
