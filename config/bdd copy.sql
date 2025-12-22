@@ -126,6 +126,15 @@ CREATE TABLE `class` (
   `max_items` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `class`
+--
+
+INSERT INTO `class` (`id`, `name`, `description`, `base_pv`, `base_mana`, `strength`, `initiative`, `max_items`) VALUES
+(1, 'Voleur', 'Un assassin agile qui frappe vite et disparaît dans les ombres', 18, 8, 6, 10, 4),
+(2, 'Bourin', 'Un guerrier brutal et impitoyable doué d\'une force extraordinaire', 35, 3, 14, 3, 6),
+(3, 'Mage', 'Un utilisateur de magie capable de puissants sorts dévastateurs', 15, 25, 3, 6, 4);
+
 -- --------------------------------------------------------
 
 --

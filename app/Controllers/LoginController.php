@@ -42,6 +42,8 @@ class LoginController
 
             if ($user && password_verify($password, $user['password'])) {
                 $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_pseudo'] = $user['pseudo'];
+                $_SESSION['is_admin'] = (bool)$user['is_admin'];
                 $_SESSION['success'] = 'connecté avec succès.';
                 header('Location: ' . base_url('/'));
                 exit();
