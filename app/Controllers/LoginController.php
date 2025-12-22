@@ -1,8 +1,6 @@
 <?php
 namespace App\Controllers;
 
-session_start();
-
 use App\Models\UserModel;
 
 class LoginController

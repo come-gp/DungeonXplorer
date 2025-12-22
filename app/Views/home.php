@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -16,7 +15,7 @@
 
     <title>Dungeon Explorer</title>
 
-    <link rel="stylesheet" href="../public/css/home.css">
+    <link rel="stylesheet" href="<?= base_url('/css/home.css') ?>?v=<?= time() ?>">
 </head>
 <body>
     <?php require __DIR__ . '/components/navbar.php'; ?>

@@ -32,6 +32,23 @@ p{
     font-family: 'Roboto', sans-serif;
 }
 
+.navbar {
+    background-color: #2E2E2E !important;
+    border-bottom: 2px solid #C4975E;
+}
+
+.navbar-brand {
+    font-family: 'Pirata One', cursive;
+    color: #C4975E !important;
+    font-size: 1.8rem;
+}
+
+.btn-outline-light:hover {
+    background-color: #C4975E;
+    border-color: #C4975E;
+    color: #1A1A1A !important;
+}
+
 .main-container {
     background-color: #2E2E2E;
     border-radius: 10px;

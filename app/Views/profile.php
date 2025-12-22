@@ -1,114 +1,3 @@
-<?php
-
-session_start();
-
-if (!isset($_SESSION['user_id'])) {
-    header('Location: ../login/login.php');
-    exit;
-}
-
-require_once '../php/Database.php';
-
-$user_id = $_SESSION['user_id'];
-$success_message = '';
-$error_message = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
-    $new_pseudo = trim($_POST['pseudo']);
-    $current_password = $_POST['current_password'];
-    $new_password = $_POST['new_password'];
-    $confirm_password = $_POST['confirm_password'];
-
-    try {
-        $stmt = $db->prepare("SELECT password FROM user WHERE id = ?");
-        $stmt->execute([$user_id]);
-        $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!password_verify($current_password, $user_data['password'])) {
-            $error_message = "Le mot de passe actuel est incorrect.";
-        } 
-        elseif (empty($new_pseudo) || strlen($new_pseudo) < 3) {
-            $error_message = "Le pseudo doit contenir au moins 3 caractères.";
-        }
-        elseif (!empty($new_password)) {
-            if (strlen($new_password) < 6) {
-                $error_message = "Le nouveau mot de passe doit contenir au moins 6 caractères.";
-            } elseif ($new_password !== $confirm_password) {
-                $error_message = "Les mots de passe ne correspondent pas.";
-            } else {
-                $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-                $stmt = $db->prepare("UPDATE user SET pseudo = ?, password = ? WHERE id = ?");
-                $stmt->execute([$new_pseudo, $hashed_password, $user_id]);
-                $success_message = "Profil et mot de passe modifiés avec succès !";
-            }
-        } else {
-            $stmt = $db->prepare("UPDATE user SET pseudo = ? WHERE id = ?");
-            $stmt->execute([$new_pseudo, $user_id]);
-            $success_message = "Profil modifié avec succès !";
-        }
-    } catch (PDOException $e) {
-        $error_message = "Erreur lors de la modification : " . $e->getMessage();
-    }
-}
-
-try {
-    $stmt = $db->prepare("SELECT id, pseudo FROM user WHERE id = ?");
-    $stmt->execute([$user_id]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$user) {
-        session_destroy();
-        header('Location: ../login/login.php');
-        exit;
-    }
-
-    $stmt = $db->prepare("SELECT COUNT(*) as total FROM appartenir WHERE id_user = ?");
-    $stmt->execute([$user_id]);
-    $hero_count = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-
-    // Récupération de tous les héros avec leurs informations
-    $stmt = $db->prepare("
-        SELECT 
-            h.id,
-            h.name AS hero_name,
-            h.pv,
-            h.mana,
-            h.strength,
-            h.xp,
-            h.current_level,
-            h.image,
-            c.name AS class_name,
-            a.derniere_utilisation,
-            (SELECT COUNT(*) 
-             FROM hero_progress 
-             WHERE hero_id = h.id) AS chapters_completed,
-            (SELECT chapter_id 
-             FROM hero_progress 
-             WHERE hero_id = h.id 
-             ORDER BY completion_date DESC 
-             LIMIT 1) AS last_chapter_id,
-            (SELECT content 
-             FROM chapter 
-             WHERE id = (SELECT chapter_id 
-                        FROM hero_progress 
-                        WHERE hero_id = h.id 
-                        ORDER BY completion_date DESC 
-                        LIMIT 1)
-             LIMIT 1) AS last_chapter_content
-        FROM hero h
-        INNER JOIN appartenir a ON h.id = a.id_hero
-        LEFT JOIN class c ON h.class_id = c.id
-        WHERE a.id_user = ?
-        ORDER BY a.derniere_utilisation DESC
-    ");
-    $stmt->execute([$user_id]);
-    $heroes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-} catch (PDOException $e) {
-    $error_message = "Erreur lors de la récupération des données : " . $e->getMessage();
-}
-?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -118,97 +7,31 @@ try {
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="../style.css">
-    
-    <style>
-        .profile-avatar {
-            width: 100%;
-            aspect-ratio: 1;
-            background: linear-gradient(135deg, #C4975E 0%, #8B1E1E 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 120px;
-            color: white;
-            border-radius: 12px 12px 0 0;
-        }
-
-        .party-card {
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .party-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(196, 151, 94, 0.3);
-        }
-
-        .level-badge {
-            background: linear-gradient(135deg, #C4975E 0%, #8B1E1E 100%);
-        }
-
-        .stat-icon {
-            width: 35px;
-            height: 35px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-
-        .sticky-sidebar {
-            position: sticky;
-            top: 20px;
-        }
-
-        .navbar {
-            border-bottom: 2px solid #C4975E;
-        }
-
-        .navbar-brand {
-            font-family: 'Pirata One', cursive;
-        }
-
-        .card-body{
-            background-color: #E5E5E5;
-        }
-    </style>
+    <link rel="stylesheet" href="<?= base_url('/css/profile.css') ?>?v=<?= time() ?>">
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark shadow-sm mb-4">
-        <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1">
-                <i class="bi bi-controller"></i> DungeonXplorer
-            </span>
-            <a href="../index.php" class="btn btn-outline-light btn-sm">
-                <i class="bi bi-house-door"></i> Accueil
-            </a>
-        </div>
-    </nav>
+    <?php require __DIR__ . '/components/navbar.php'; ?>
 
     <div class="container py-4">
         <div class="row g-4">
             <div class="col-lg-3">
                 <div class="sticky-sidebar">
                     <div class="card shadow">
-                        <div class="profile-avatar">
-                            <i class="bi bi-person-circle"></i>
-                        </div>
                         <div class="card-body">
-                            <h5 class="card-title fw-bold mb-1"><?php echo htmlspecialchars($user['pseudo']); ?></h5>
-                            <p class="text-muted small mb-3">@<?php echo htmlspecialchars($user['pseudo']); ?></p>
+                            <h5 class="card-title fw-bold mb-1"><?= htmlspecialchars($user['pseudo']) ?></h5>
+                            <p class="text-muted small mb-3">@<?= htmlspecialchars($user['pseudo']) ?></p>
                             
                             <button class="btn btn-primary w-100 mb-2" data-bs-toggle="modal" data-bs-target="#editModal">
                                 <i class="bi bi-pencil-square"></i> Modifier le profil
                             </button>
-                            <a href="../logout.php" class="btn btn-danger w-100">
+                            <a href="<?= base_url('/logout') ?>" class="btn btn-danger w-100">
                                 <i class="bi bi-box-arrow-right"></i> Déconnexion
                             </a>
                         </div>
                         <div class="card-footer bg-light">
                             <div class="d-flex justify-content-center align-items-center gap-2">
                                 <i class="bi bi-person-badge"></i>
-                                <strong><?php echo $hero_count; ?></strong>
+                                <strong><?= $hero_count ?></strong>
                                 <span class="text-muted">héros</span>
                             </div>
                         </div>
@@ -219,14 +42,14 @@ try {
             <div class="col-lg-9">
                 <?php if ($success_message): ?>
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="bi bi-check-circle"></i> <?php echo htmlspecialchars($success_message); ?>
+                        <i class="bi bi-check-circle"></i> <?= htmlspecialchars($success_message) ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 <?php endif; ?>
 
                 <?php if ($error_message): ?>
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="bi bi-exclamation-triangle"></i> <?php echo htmlspecialchars($error_message); ?>
+                        <i class="bi bi-exclamation-triangle"></i> <?= htmlspecialchars($error_message) ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 <?php endif; ?>
@@ -247,7 +70,7 @@ try {
                             <i class="bi bi-person-plus display-1 text-muted"></i>
                             <h3 class="mt-3">Aucun héros pour le moment</h3>
                             <p class="text-muted mb-4">Créez votre premier héros et commencez votre aventure !</p>
-                            <a href="../new-game/index.php" class="btn btn-primary btn-lg">
+                            <a href="<?= base_url('/new-game') ?>" class="btn btn-primary btn-lg">
                                 <i class="bi bi-plus-circle"></i> Créer un héros
                             </a>
                         </div>
@@ -255,20 +78,20 @@ try {
                 <?php else: ?>
                     <div class="row row-cols-1 g-3">
                         <?php foreach ($heroes as $hero): ?>
-                            <div class="col" data-hero-name="<?php echo strtolower(htmlspecialchars($hero['hero_name'])); ?>">
+                            <div class="col" data-hero-name="<?= strtolower(htmlspecialchars($hero['hero_name'])) ?>">
                                 <div class="card shadow party-card h-100">
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-start mb-3">
                                             <div>
                                                 <h5 class="card-title mb-1 d-flex align-items-center">
-                                                    <?php echo htmlspecialchars($hero['hero_name']); ?>
+                                                    <?= htmlspecialchars($hero['hero_name']) ?>
                                                     <span class="badge level-badge text-white ms-2">
-                                                        Niv. <?php echo $hero['current_level']; ?>  
+                                                        Niv. <?= $hero['current_level'] ?>  
                                                     </span>
                                                 </h5>
                                                 <p class="text-muted small mb-0 mt-1">
                                                     <i class="bi bi-shield-fill"></i>
-                                                    <?php echo $hero['class_name'] ? htmlspecialchars($hero['class_name']) : 'Sans classe'; ?>
+                                                    <?= $hero['class_name'] ? htmlspecialchars($hero['class_name']) : 'Sans classe' ?>
                                                 </p>
                                             </div>
                                         </div>
@@ -281,7 +104,7 @@ try {
                                                     </div>
                                                     <div>
                                                         <small class="text-muted d-block">PV</small>
-                                                        <strong><?php echo $hero['pv']; ?></strong>
+                                                        <strong><?= $hero['pv'] ?></strong>
                                                     </div>
                                                 </div>
                                             </div>
@@ -292,7 +115,7 @@ try {
                                                     </div>
                                                     <div>
                                                         <small class="text-muted d-block">Mana</small>
-                                                        <strong><?php echo $hero['mana']; ?></strong>
+                                                        <strong><?= $hero['mana'] ?></strong>
                                                     </div>
                                                 </div>
                                             </div>
@@ -303,7 +126,7 @@ try {
                                                     </div>
                                                     <div>
                                                         <small class="text-muted d-block">Force</small>
-                                                        <strong><?php echo $hero['strength']; ?></strong>
+                                                        <strong><?= $hero['strength'] ?></strong>
                                                     </div>
                                                 </div>
                                             </div>
@@ -314,7 +137,7 @@ try {
                                                     </div>
                                                     <div>
                                                         <small class="text-muted d-block">XP</small>
-                                                        <strong><?php echo $hero['xp']; ?></strong>
+                                                        <strong><?= $hero['xp'] ?></strong>
                                                     </div>
                                                 </div>
                                             </div>
@@ -323,13 +146,13 @@ try {
                                         <?php if ($hero['last_chapter_id']): ?>
                                             <div class="alert alert-info mb-3">
                                                 <h6 class="alert-heading mb-1">
-                                                    <i class="bi bi-book"></i> Chapitre <?php echo $hero['last_chapter_id']; ?>
+                                                    <i class="bi bi-book"></i> Chapitre <?= $hero['last_chapter_id'] ?>
                                                 </h6>
                                                 <small class="d-block mb-1">
-                                                    <?php echo $hero['chapters_completed']; ?> chapitre(s) complété(s)
+                                                    <?= $hero['chapters_completed'] ?> chapitre(s) complété(s)
                                                 </small>
                                                 <small class="text-muted">
-                                                    <?php echo htmlspecialchars(substr($hero['last_chapter_content'], 0, 80)) . '...'; ?>
+                                                    <?= htmlspecialchars(substr($hero['last_chapter_content'], 0, 80)) . '...' ?>
                                                 </small>
                                             </div>
                                         <?php else: ?>
@@ -341,14 +164,14 @@ try {
                                         <div class="d-flex justify-content-between align-items-center pt-3 border-top">
                                             <small class="text-muted">
                                                 <i class="bi bi-clock"></i>
-                                                <?php echo date('d/m/Y', strtotime($hero['derniere_utilisation'])); ?>
+                                                <?= date('d/m/Y', strtotime($hero['derniere_utilisation'])) ?>
                                             </small>
                                             <div class="btn-group">
-                                                <a href="../game/play.php?hero_id=<?php echo $hero['id']; ?>" class="btn btn-primary btn-sm">
+                                                <a href="<?= base_url('/game?hero_id=' . $hero['id']) ?>" class="btn btn-primary btn-sm">
                                                     <i class="bi bi-play-fill"></i> 
-                                                    <?php echo $hero['last_chapter_id'] ? 'Reprendre' : 'Commencer'; ?>
+                                                    <?= $hero['last_chapter_id'] ? 'Reprendre' : 'Commencer' ?>
                                                 </a>
-                                                <a href="../game/hero-details.php?id=<?php echo $hero['id']; ?>" class="btn btn-outline-secondary btn-sm">
+                                                <a href="<?= base_url('/hero-details?id=' . $hero['id']) ?>" class="btn btn-outline-secondary btn-sm">
                                                     <i class="bi bi-eye"></i> Détails
                                                 </a>
                                             </div>
@@ -372,7 +195,7 @@ try {
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form method="POST" action="">
+                <form method="POST" action="<?= base_url('/profile') ?>">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="pseudo" class="form-label">Pseudo</label>
@@ -381,7 +204,7 @@ try {
                                 class="form-control" 
                                 id="pseudo" 
                                 name="pseudo" 
-                                value="<?php echo htmlspecialchars($user['pseudo']); ?>" 
+                                value="<?= htmlspecialchars($user['pseudo']) ?>" 
                                 required
                                 minlength="3"
                             >

@@ -1,0 +1,347 @@
+/* ===================================
+   Profile Page - DungeonXplorer Theme
+   =================================== */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Pirata+One&family=Roboto:wght@400;700&display=swap');
+
+/* ===================================
+   Styles de base
+   =================================== */
+body {
+    background-color: #1A1A1A !important;
+    color: #E5E5E5 !important;
+    font-family: 'Roboto', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Pirata One', cursive;
+    color: #C4975E !important;
+}
+
+/* ===================================
+   Container principal
+   =================================== */
+.container {
+    max-width: 1400px;
+}
+
+/* ===================================
+   Navbar
+   =================================== */
+.navbar {
+    background-color: #2E2E2E !important;
+    border-bottom: 2px solid #C4975E;
+}
+
+.navbar-brand {
+    font-family: 'Pirata One', cursive;
+    color: #C4975E !important;
+    font-size: 1.8rem;
+}
+
+.btn-outline-light:hover {
+    background-color: #C4975E;
+    border-color: #C4975E;
+    color: #1A1A1A !important;
+}
+
+/* ===================================
+   Sidebar Profile Card
+   =================================== */
+.sticky-sidebar {
+    position: sticky;
+    top: 20px;
+}
+
+.card {
+    background-color: #2E2E2E !important;
+    border: 1px solid #C4975E;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.profile-avatar {
+    width: 100%;
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, #C4975E 0%, #8B1E1E 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 120px;
+    color: white;
+}
+
+.card-body {
+    background-color: #2E2E2E !important;
+    padding: 1.5rem;
+}
+
+.card-title {
+    color: #E5E5E5 !important;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+}
+
+.text-muted {
+    color: #BFBFBF !important;
+}
+
+.card-footer {
+    background-color: #1A1A1A !important;
+    border-top: 1px solid #C4975E;
+}
+
+/* ===================================
+   Boutons
+   =================================== */
+.btn-primary {
+    background-color: #C4975E;
+    border: none;
+    color: #1A1A1A;
+    font-weight: 700;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #8B1E1E;
+    color: #E5E5E5;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(196, 151, 94, 0.3);
+}
+
+.btn-danger {
+    background-color: #8B1E1E;
+    border: none;
+    color: #E5E5E5;
+    font-weight: 700;
+    transition: all 0.3s;
+}
+
+.btn-danger:hover {
+    background-color: #6B1515;
+    color: #E5E5E5;
+    transform: translateY(-2px);
+}
+
+.btn-outline-secondary {
+    border-color: #C4975E;
+    color: #C4975E;
+    background-color: transparent;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #C4975E;
+    color: #1A1A1A;
+    border-color: #C4975E;
+}
+
+/* ===================================
+   Alerts
+   =================================== */
+.alert-success {
+    background-color: #4A7A66;
+    border-color: #4A7A66;
+    color: #E5E5E5;
+}
+
+.alert-danger {
+    background-color: #8B1E1E;
+    border-color: #8B1E1E;
+    color: #E5E5E5;
+}
+
+.alert-info {
+    background-color: #2E5266;
+    border-color: #2E5266;
+    color: #E5E5E5;
+}
+
+/* ===================================
+   Hero Cards
+   =================================== */
+.party-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    background-color: #2E2E2E !important;
+    border: 1px solid #C4975E;
+}
+
+.party-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(196, 151, 94, 0.4);
+}
+
+.party-card .card-body {
+    background-color: #2E2E2E !important;
+}
+
+.level-badge {
+    background: linear-gradient(135deg, #C4975E 0%, #8B1E1E 100%);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+}
+
+/* ===================================
+   Stats Icons
+   =================================== */
+.stat-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.stat-icon.text-danger {
+    background-color: rgba(139, 30, 30, 0.25);
+}
+
+.stat-icon.text-primary {
+    background-color: rgba(78, 115, 223, 0.25);
+}
+
+.stat-icon.text-warning {
+    background-color: rgba(196, 151, 94, 0.25);
+}
+
+.stat-icon.text-success {
+    background-color: rgba(74, 122, 102, 0.25);
+}
+
+/* ===================================
+   Search Input
+   =================================== */
+.input-group-text {
+    background-color: #1A1A1A;
+    border: 1px solid #C4975E;
+    color: #C4975E;
+}
+
+.form-control {
+    background-color: #1A1A1A;
+    border: 1px solid #C4975E;
+    color: #E5E5E5;
+}
+
+.form-control:focus {
+    background-color: #1A1A1A;
+    border-color: #C4975E;
+    color: #E5E5E5;
+    box-shadow: 0 0 0 0.25rem rgba(196, 151, 94, 0.25);
+}
+
+.form-control::placeholder {
+    color: #BFBFBF;
+}
+
+/* ===================================
+   Modal
+   =================================== */
+.modal-content {
+    background-color: #2E2E2E;
+    border: 2px solid #C4975E;
+}
+
+.modal-header {
+    border-bottom: 1px solid #C4975E;
+}
+
+.modal-title {
+    color: #C4975E !important;
+    font-family: 'Pirata One', cursive;
+}
+
+.modal-body {
+    background-color: #2E2E2E;
+}
+
+.modal-footer {
+    border-top: 1px solid #C4975E;
+    background-color: #2E2E2E;
+}
+
+.form-label {
+    color: #E5E5E5;
+    font-weight: 500;
+}
+
+.form-text {
+    color: #BFBFBF;
+}
+
+.btn-close {
+    filter: invert(1);
+}
+
+.btn-secondary {
+    background-color: #1A1A1A;
+    border: 1px solid #C4975E;
+    color: #E5E5E5;
+}
+
+.btn-secondary:hover {
+    background-color: #2E2E2E;
+    border-color: #C4975E;
+    color: #E5E5E5;
+}
+
+/* ===================================
+   Empty State
+   =================================== */
+.card.shadow.text-center {
+    background-color: #2E2E2E !important;
+    border: 2px dashed #C4975E;
+}
+
+.card.shadow.text-center .card-body {
+    padding: 3rem;
+}
+
+.card.shadow.text-center i {
+    color: #C4975E;
+}
+
+.card.shadow.text-center h3 {
+    color: #E5E5E5 !important;
+    font-family: 'Pirata One', cursive;
+}
+
+/* ===================================
+   Borders & Dividers
+   =================================== */
+.border-top {
+    border-color: #C4975E !important;
+}
+
+hr {
+    border-color: #C4975E;
+    opacity: 0.3;
+}
+
+/* ===================================
+   Responsive
+   =================================== */
+@media (max-width: 992px) {
+    .sticky-sidebar {
+        position: relative;
+        top: 0;
+    }
+    
+    .profile-avatar {
+        font-size: 80px;
+    }
+}
+
+@media (max-width: 576px) {
+    .profile-avatar {
+        font-size: 60px;
+    }
+    
+    .stat-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+}
