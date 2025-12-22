@@ -92,6 +92,11 @@ h1, h2, h3, h4, h5, h6 {
     border-top: 1px solid #C4975E;
 }
 
+.card-footer i,
+.card-footer strong {
+    color: #BFBFBF !important;
+}
+
 /* ===================================
    Boutons
    =================================== */
@@ -108,6 +113,11 @@ h1, h2, h3, h4, h5, h6 {
     color: #E5E5E5;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(196, 151, 94, 0.3);
+}
+
+.btn-primary i,
+.btn-primary .bi {
+    color: inherit !important;
 }
 
 .btn-danger {

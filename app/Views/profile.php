@@ -251,7 +251,7 @@
                                 placeholder="Confirmer le nouveau mot de passe"
                             >
                         </div>
-                    </div>
+                    </div>    <!-- Bootstrap JS Bundle -->
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
