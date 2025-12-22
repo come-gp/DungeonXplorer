@@ -70,20 +70,7 @@ $router->post('new-game', function() {
 });
 
 
-//jeu
 
-
-// get
-$router->get('game', function() {
-    $controller = new GameController();
-    $controller->show();
-});
-
-//post
-$router->post('game', function() {
-    $controller = new GameController();
-    $controller->register();
-});
 
 
 

@@ -3,4 +3,4 @@ imgs/
 
 /vendor/
 
-.env
+/.env

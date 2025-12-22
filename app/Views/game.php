@@ -1,23 +1,23 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DungeonXplorer - Aventure</title>
-    <!-- <link rel="stylesheet" href="style.css"> -->
     
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVJkEZSMUkrQ6usznuy8+u+7NfbbQvB/bigoOkc46FefubnmUZnyjveGQE/7GuirVH40LxUpg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="stylesheet" href="<?= base_url('/css/style.css') ?>">
     
 </head>
 <body>
-    <!-- <header>
-        <h1>DungeonXplorer</h1>
-        <nav>
-            <a href="../index.php">Accueil</a>
-            <a href="../profil.php">Profil</a>
-            <a href="../php/logout.php">Déconnexion</a>
-        </nav>
-    </header> -->
+    <?php require __DIR__ . '/components/navbar.php'; ?>
     
     <main>
 
@@ -188,10 +188,12 @@
     </footer>
 
     <!-- <script type="module" src="main.js"></script> -->
-     <!-- <script src="elemsHtml.js"></script>
-    <script src="main.js"></script> -->
-    <script src="../../public/js/elemsHtml.js"></script>public\js\combat.js
-    <script src="public\js\combat.js"></script>
+    <script src="<?= base_url('/js/elemsHtml.js') ?>"></script>
+    <script src="<?= base_url('/js/combat.js') ?>"></script>
+    
+    <!-- vbootstrap  -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOYfy6S4+gkCQ/lqojAsuBjKSo" crossorigin="anonymous"></script>
 
 </body>
 </html>
