@@ -21,7 +21,6 @@ $isAdmin = $_SESSION['is_admin'] ?? false;
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                <!-- non co -->
                 <?php if (!$isLoggedIn): ?>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= base_url('/login') ?>">Se Connecter</a>
@@ -30,7 +29,6 @@ $isAdmin = $_SESSION['is_admin'] ?? false;
                         <a class="nav-link" href="<?= base_url('/register') ?>">S'inscrire</a>
                     </li>
 
-                <!-- bien co -->
                 <?php else: ?>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= base_url('/game') ?>">
