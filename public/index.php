@@ -1,6 +1,7 @@
 <?php
 // public/index.php
-declare(strict_types=1);
+
+session_start();
 
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/../app/Core/helpers.php';
@@ -11,6 +12,7 @@ use App\Controllers\HomeController;
 use App\Controllers\RegisterController;
 use App\Controllers\NewGameController;
 use App\Controllers\GameController;
+use App\Controllers\ProfileController;
 
 $router = new Router();
 
@@ -89,14 +91,28 @@ $router->post('game', function() {
     $controller->postGame();
 });
 
+//profile
+$router->get('/profile', function() {
+    $controller = new ProfileController();
+    $controller->show();
+});
 
+$router->post('/profile', function() {
+    $controller = new ProfileController();
+    $controller->update();
+});
+
+//logout
+$router->get('/logout', function() {
+    session_destroy();
+    header('Location: /DungeonXplorer/public/login');
+    exit;
+});     
 
 // 404
-
 $router->set404(function() {
     header('HTTP/1.1 404 Not Found');
     echo "404 - Page introuvable";
 });
-
 
 $router->run();

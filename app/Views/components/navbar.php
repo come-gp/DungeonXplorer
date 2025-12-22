@@ -21,7 +21,6 @@ $isAdmin = $_SESSION['is_admin'] ?? false;
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                <!-- non co -->
                 <?php if (!$isLoggedIn): ?>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= base_url('/login') ?>">Se Connecter</a>
@@ -30,7 +29,6 @@ $isAdmin = $_SESSION['is_admin'] ?? false;
                         <a class="nav-link" href="<?= base_url('/register') ?>">S'inscrire</a>
                     </li>
 
-                <!-- bien co -->
                 <?php else: ?>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= base_url('/game') ?>">
@@ -45,9 +43,6 @@ $isAdmin = $_SESSION['is_admin'] ?? false;
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="profileDropdown">
                             <li><a class="dropdown-item" href="<?= base_url('/profile') ?>">
                                 <i class="fas fa-user"></i> Mon Profil
-                            </a></li>
-                            <li><a class="dropdown-item" href="<?= base_url('/profile/settings') ?>">
-                                <i class="fas fa-cog"></i> Paramètres
                             </a></li>
                             
                             <?php if ($isAdmin): ?>
