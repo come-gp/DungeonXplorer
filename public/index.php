@@ -10,6 +10,7 @@ use App\Controllers\LoginController;
 use App\Controllers\HomeController;
 use App\Controllers\RegisterController;
 use App\Controllers\NewGameController;
+use App\Controllers\GameController;
 
 $router = new Router();
 
@@ -66,6 +67,26 @@ $router->get('new-game', function() {
 $router->post('new-game', function() {
     $controller = new NewGameController();
     $controller->create();
+});
+
+
+
+
+
+
+
+//game
+
+// get
+$router->get('game', function() {
+    $controller = new GameController();
+    $controller->show();
+});
+
+//post
+$router->post('game', function() {
+    $controller = new GameController();
+    $controller->postGame();
 });
 
 

@@ -156,4 +156,30 @@ class HeroModel
         ');
         return $stmt->execute([$userId, $heroId]);
     }
+
+
+    public function getProgress(int $heroId): ?array
+    {
+        $stmt = $this->db->prepare('
+            SELECT chapter_id 
+            FROM hero_progress 
+            WHERE hero_id = ? 
+            ORDER BY completion_date DESC 
+            LIMIT 1
+        ');
+        $stmt->execute([$heroId]);
+        $progres = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $progres ?: null;
+    }
+
+    public function saveProgress(int $heroId, int $chapterId): bool
+    {
+        $stmt = $this->db->prepare('
+            INSERT INTO hero_progress (hero_id, chapter_id, completion_date)
+            VALUES (?, ?, NOW())
+        ');
+        return $stmt->execute([$heroId, $chapterId]);
+    }
+
+
 }
