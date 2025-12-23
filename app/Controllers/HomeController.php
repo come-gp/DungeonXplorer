@@ -29,9 +29,10 @@ class HomeController {
             $lastIdHero = $this->homeModel->getLastHeroByUserId($_SESSION['user_id']);
             if ($lastIdHero) {
                 $lastHero = $this->homeModel->getHeroById($lastIdHero['id_hero']);
-                $idChapter = $this->homeModel->getChapterIdByHeroId($lastIdHero['id_hero']);
-                if ($idChapter) {
-                    $chapter = $this->homeModel->getChapterById($idChapter['chapter_id']);
+                $progress = $this->homeModel->getProgressByHeroId($lastIdHero['id_hero']);
+                $class = $this->homeModel->getClassByHeroId($lastIdHero['id_hero']);
+                if ($progress) {
+                    $chapter = $this->homeModel->getChapterById($progress['chapter_id']);
                 }
             }
         }

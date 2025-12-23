@@ -15,7 +15,7 @@ class HomeModel
     public function getLastHeroByUserId(int $userId): ?array
     {
         $stmt = $this->db->prepare('
-            SELECT id_hero FROM appartenir 
+            SELECT * FROM appartenir 
             WHERE id_user = ? 
             ORDER BY derniere_utilisation DESC 
             LIMIT 1
@@ -35,10 +35,10 @@ class HomeModel
         return $hero ?: null;
     }
 
-    public function getChapterIdByHeroId(int $heroId): ?array
+    public function getProgressByHeroId(int $heroId): ?array
     {
         $stmt = $this->db->prepare('
-            SELECT chapter_id FROM hero_progress 
+            SELECT * FROM hero_progress 
             WHERE hero_id = ?
             order by completion_date DESC 
             LIMIT 1
@@ -56,5 +56,17 @@ class HomeModel
         $stmt->execute([$chapterId]);
         $chapter = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $chapter ?: null;
+    }
+
+    public function getClassByHeroId(int $heroId): ?array
+    {
+        $stmt = $this->db->prepare('
+        SELECT c.* FROM class c
+        JOIN hero h ON h.class_id = c.id
+        WHERE h.id = ?
+        ');
+        $stmt->execute([$heroId]);
+        $class = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $class ?: null;
     }
 }

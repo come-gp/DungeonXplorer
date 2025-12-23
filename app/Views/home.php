@@ -28,7 +28,7 @@
 
     <div class="container my-5">
         <div class="row">
-            <div class="col d-flex flex-column align-items-start pt-5">
+            <div class="col d-flex flex-column align-items-start justify-content-center pt-4" style="width: 700px; height: 350px;">
                 <?php 
                 
                 if ($error): ?>
@@ -45,11 +45,8 @@
 
                 <?php if ($isLoggedIn): ?>
                     <a href="<?= base_url('/new-game') ?>"><button class="btn-primary">Nouvelle Partie</button></a>
-                    <button class="btn-primary">Reprendre</button>
-                    <button class="btn-primary">Charger</button>
-
-                
-
+                    <a href="<?= base_url('/game') ?>"><button class="btn-primary">Reprendre</button></a>
+                    <a href="<?= base_url('/profile') ?>"><button class="btn-primary">Charger</button></a>
                 <?php else: ?>
                     <a href="<?= base_url('/register') ?>"><button class="btn-primary">S'inscrire</button></a>
                     <a href="<?= base_url('/login') ?>"><button class="btn-primary">Se Connecter</button></a>
@@ -58,15 +55,29 @@
             <div class="col pt-4">
                 <div class=" row main-container" style = "width: 700px; height: 350px;">
                     <div class="col text-center">
-                        
+                         <?php if ($isLoggedIn): ?>
+                            <img src="<?=$lastHero['image']?>" alt="<?=$class['name']?>">
+                        <?php else: ?>
+                            <img src="../imgs/langlois.jpeg" alt="Héros" width="200" height="250" >
+                        <?php endif; ?>
                     </div>
-                    <div class="col">
-                        <h3>Dernier Héros Joué</h3>
-                        <p>Nom: <?= htmlspecialchars($lastHero['name']) ?></p>
-                        <p>Bio: <?= htmlspecialchars($lastHero['biography']) ?></p>
-                        <hr>
-                        <h3>Dernier Chapitre Joué:</h3>
-                        <p><?= htmlspecialchars($chapter['title']) ?></p>
+                    <div class="col text-center">
+                        <?php if ($isLoggedIn): ?>
+                            <h3>Dernière Partie :</h3>
+                            <p><?= htmlspecialchars($chapter['title']) ?></p>
+                            <p><?= htmlspecialchars($progress['completion_date']) ?></p>
+                            <hr>
+                            <h3>Héros :</h3>
+                            <p>Nom : <?= htmlspecialchars($lastHero['name']) ?></p>
+                            <p>Bio : <?= htmlspecialchars($lastHero['biography']) ?></p>
+                        <?php else: ?>
+                            <h3>Bienvenue Aventurier !</h3>
+                            <p>Connectez-vous ou inscrivez-vous pour commencer votre aventure dans Dungeon Explorer !</p>
+                            <hr>
+                            <h3>Créez votre héros :</h3>
+                            <p>Choisissez parmi différentes classes et personnalisez votre héros pour affronter les défis qui vous attendent.</p>   
+                            
+                        <?php endif; ?>
                     </div>
                     
                 </div>
