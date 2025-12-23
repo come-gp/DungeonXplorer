@@ -623,6 +623,9 @@ ALTER TABLE `monster_loot`
   ADD CONSTRAINT `monster_loot_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`);
 COMMIT;
 
+-- Ajout de l'heure à la date derniere_utilisation de la table appartenir
+ALTER TABLE appartenir 
+MODIFY derniere_utilisation DATETIME;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -80,7 +80,7 @@ class ProfileController
             ");
             $stmt->execute([$user_id]);
             $heroes = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-            
+
         } catch (\PDOException $e) {
             $error_message = "Erreur lors de la récupération des données : " . $e->getMessage();
             $user = ['pseudo' => 'Utilisateur'];
@@ -97,7 +97,25 @@ class ProfileController
             header('Location: ' . base_url('/login'));
             exit;
         }
-        
+
+        // Vérifier si c'est une demande de reprise de partie
+        if (isset($_POST['reprendre'])) {
+            $user_id = $_POST['user_id'] ?? null;
+            $hero_id = $_POST['hero_id'] ?? null;
+
+            if (!$user_id || !$hero_id) {
+                $_SESSION['error_message'] = "Données manquantes.";
+                header('Location: ' . base_url('/profile'));
+                exit;
+            }
+
+            $this->updateLastUsed($user_id, $hero_id);
+            $_SESSION['current_hero_id'] = $hero_id; // Ajouter le hero_id en session
+            header('Location: ' . base_url('/game'));
+            exit;
+        }
+
+        // Sinon, c'est une modification de profil
         $user_id = $_SESSION['user_id'];
         $new_pseudo = trim($_POST['pseudo'] ?? '');
         $current_password = $_POST['current_password'] ?? '';
@@ -151,4 +169,15 @@ class ProfileController
         header('Location: ' . base_url('/profile'));
         exit;
     }
+
+    public function updateLastUsed($user_id, $hero_id): bool
+    {
+        $stmt = $this->db->prepare('
+            UPDATE appartenir 
+            SET derniere_utilisation = NOW() 
+            WHERE id_user = ? AND id_hero = ?
+        ');
+        return $stmt->execute([$user_id, $hero_id]);
+    }
+
 }

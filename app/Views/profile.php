@@ -168,13 +168,13 @@
                                                 <?= date('d/m/Y', strtotime($hero['derniere_utilisation'])) ?>
                                             </small>
                                             <div class="btn-group">
-                                                <a href="<?= base_url('/game?hero_id=' . $hero['id']) ?>" class="btn btn-primary btn-sm">
-                                                    <i class="bi bi-play-fill"></i> 
-                                                    <?= $hero['last_chapter_id'] ? 'Reprendre' : 'Commencer' ?>
-                                                </a>
-                                                <a href="<?= base_url('/hero-details?id=' . $hero['id']) ?>" class="btn btn-outline-secondary btn-sm">
-                                                    <i class="bi bi-eye"></i> Détails
-                                                </a>
+                                                <form method="POST">
+                                                    <input type="hidden" name="user_id" value="<?= $user_id ?>">
+                                                    <input type="hidden" name="hero_id" value="<?= $hero['id'] ?>">
+                                                    <button type="submit" name="reprendre" class="btn btn-primary btn-sm">
+                                                        <i class="bi bi-play-fill"></i> Reprendre
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
