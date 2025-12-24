@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Création de personnage - DungeonXplorer</title>
     <link rel="stylesheet" href="<?= base_url('/css/navbar.css') ?>">
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="<?= base_url('/css/new-game.css') ?>">
+    <script defer src="<?= base_url('/js/new-game.js') ?>"></script>
 </head>
 <body>
     <div class="container">
@@ -94,11 +95,18 @@
                 </div>
                 
                 <div class="form-actions">
-                    <button type="submit">Commencer l'aventure</button>
+                    <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+                    <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
                     <a href="../index.php">Retour</a>
                 </div>
                 
             </form>
+            <div style="text-align:center;margin-top:40px;">
+                <span class="step"></span>
+                <span class="step"></span>
+                <span class="step"></span>
+                <span class="step"></span>
+            </div>
         </main>
         
         <footer>
