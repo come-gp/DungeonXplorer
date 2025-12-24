@@ -2,8 +2,6 @@
 
 namespace App\Controllers;
 
-session_start();
-
 use App\Models\HomeModel;
 
 class HomeController {
