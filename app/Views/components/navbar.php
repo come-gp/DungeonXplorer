@@ -60,7 +60,7 @@ $isAdmin = $_SESSION['is_admin'] ?? false;
                             
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <form method="POST" action="<?= base_url('/logout') ?>" class="m-0">
+                                <form method="GET" action="<?= base_url('/logout') ?>" class="m-0">
                                     <button type="submit" class="dropdown-item text-danger w-100 text-start">
                                         <i class="fas fa-sign-out-alt"></i> Se déconnecter
                                     </button>
