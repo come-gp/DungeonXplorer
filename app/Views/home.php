@@ -52,29 +52,31 @@
             </div>
             <div class="col pt-4">
                 <div class=" row main-container" style = "width: 700px; height: 350px;">
-                    <div class="col text-center">
-                         <?php if ($isLoggedIn): ?>
-                            <img src="<?=$lastHero['image']?>" alt="<?=$class['name']?>">
-                        <?php else: ?>
-                            <img src="../imgs/langlois.jpeg" alt="Héros" width="200" height="250" >
-                        <?php endif; ?>
-                    </div>
-                    <div class="col text-center">
-                        <?php if ($isLoggedIn): ?>
-                            <h3>Dernière Partie :</h3>
-                            <p><?= htmlspecialchars($chapter['title']) ?></p>
-                            <p><?= htmlspecialchars($progress['completion_date']) ?></p>
-                            <hr>
-                            <h3>Héros :</h3>
-                            <p>Nom : <?= htmlspecialchars($lastHero['name']) ?></p>
-                            <p>Bio : <?= htmlspecialchars($lastHero['biography']) ?></p>
-                        <?php else: ?>
-                            <h3>Bienvenue Aventurier !</h3>
-                            <p>Connectez-vous ou inscrivez-vous pour commencer votre aventure dans Dungeon Explorer !</p>
-                            <hr>
-                            <h3>Créez votre héros :</h3>
-                            <p>Choisissez parmi différentes classes et personnalisez votre héros pour affronter les défis qui vous attendent.</p>   
-                            
+                        <?php if ($isLoggedIn && $lastHero !== null) : ?>
+                            <div class="col text-center">
+                         
+                                <img src="<?=$lastHero['image']?>" alt="<?=$class['name']?>">
+                        
+                            </div>
+                            <div class="col text-center">
+                                <h3>Dernière Partie :</h3>
+                                <p><?= htmlspecialchars($chapter['title']) ?></p>
+                                <p><?= htmlspecialchars($progress['completion_date']) ?></p>
+                                <hr>
+                                <h3>Héros :</h3>
+                                <p>Nom : <?= htmlspecialchars($lastHero['name']) ?></p>
+                                <p>Bio : <?= htmlspecialchars($lastHero['biography']) ?></p>
+                            <?php else: ?>
+                                <?php if ( !$isLoggedIn): ?>
+                                <h3>Bienvenue Aventurier !</h3>
+                                <p>Connectez-vous ou inscrivez-vous pour commencer votre aventure dans Dungeon Explorer !</p>
+                                <hr>
+                                <h3>Créez votre héros :</h3>
+                                <p>Choisissez parmi différentes classes et personnalisez votre héros pour affronter les défis qui vous attendent.</p>   
+                                <?php else: ?>
+                                <h3>Aucune partie en cours</h3>
+                                <p>Vous n'avez pas encore commencé d'aventure. Lancez une nouvelle partie pour créer votre héros et explorer les donjons !</p>
+                                <?php endif; ?>
                         <?php endif; ?>
                     </div>
                     
