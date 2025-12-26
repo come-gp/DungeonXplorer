@@ -22,6 +22,7 @@ class HomeController {
         
         $isLoggedIn = isset($_SESSION['user_id']);
         $isAdmin = $isLoggedIn && $this->homeModel->isAdmin($_SESSION['user_id']);
+        $_SESSION['is_admin'] = $isAdmin;
         
         
         if ($isLoggedIn) {

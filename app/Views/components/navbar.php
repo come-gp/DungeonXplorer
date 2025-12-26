@@ -6,6 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 $isLoggedIn = isset($_SESSION['user_id']);
 $userId = $_SESSION['user_id'] ?? null;
 $userPseudo = $_SESSION['user_pseudo'] ?? null;
+$isAdmin = $_SESSION['is_admin'] ?? false;  
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
