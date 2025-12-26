@@ -220,6 +220,10 @@ CREATE TABLE `items` (
   `item_type` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+
+-- Ajouter les potions de base
+INSERT INTO `items` (`id`, `name`, `description`, `item_type`) VALUES
+(1, 'Potion', 'Restaure 15 points de vie', 'potion_pv');
 -- --------------------------------------------------------
 
 --
