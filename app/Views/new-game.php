@@ -54,7 +54,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <h3>Choisissez votre classe</h3>
+                        <h2>Choisissez votre classe</h2>
                         <div class="carrousel">
                             <?php foreach ($classes as $class): ?>
                                 <div class="slide">
