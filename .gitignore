@@ -2,6 +2,6 @@
 
 
 .env
-
-
 /vendor/
+/public/imgs/illuChap/
+/imgs/illuChap/

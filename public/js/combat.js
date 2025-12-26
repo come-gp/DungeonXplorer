@@ -1,38 +1,140 @@
-// elements (a declarer dans un autre fichier par la suite ) :
-// const logDiv = document.getElementById('combatLog');
-
-
-
 // Fonction pour lancer un dé
 function rollDice(faces) {
     return Math.floor(Math.random() * faces) + 1;
 }
 
-// Ajouter un message au log
+// mettre un message dans le log
 function addLog(message) {
+    console.log('[LOG]', message);
     combat.log.push(message);
+    
+    if (!window.logDiv) {
+        window.logDiv = document.getElementById('combatLog');
+    }
+    
+    // if (!window.logDiv) {
+    //     console.warn('logDiv n\'est pas initialisé!');
+    //     return;
+    // }
     
     const p = document.createElement('p');
     p.textContent = message;
-    logDiv.appendChild(p);
-    logDiv.scrollTop = logDiv.scrollHeight;
+    window.logDiv.appendChild(p);
+    window.logDiv.scrollTop = window.logDiv.scrollHeight;
+}
+
+// Vérifier si le héros est mort et désactiver l'interface
+function checkHeroDeath() {
+    if (!combat || !combat.hero) {
+        console.warn('Combat non initialisé');
+        return false;
+    }
+    
+    const isDead = combat.hero.pv <= 0;
+    
+    if (isDead) {
+        
+        // message de mort
+        const deathAlert = document.getElementById('deathAlert');
+        if (deathAlert) {
+            deathAlert.style.display = 'block';
+        }
+        
+        // on eneleve les boutons
+        const combatActions = document.getElementById('combatActions');
+        if (combatActions) {
+            const buttons = combatActions.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.disabled = true;
+                button.style.opacity = '0.5';
+                button.style.cursor = 'not-allowed';
+            });
+        }
+        
+        // on enleve les choix
+        const choiceButtons = document.querySelectorAll('button[type="submit"]');
+        choiceButtons.forEach(button => {
+            if (!button.classList.contains('btn-close') && !button.id.includes('death')) {
+                button.disabled = true;
+                button.style.opacity = '0.5';
+                button.style.cursor = 'not-allowed';
+            }
+        });
+        
+        return true;
+    }
+    
+    return false;
 }
 
 // maj interface
 function updateUI() {
-    // Stats
-    //hero:
-    heroPV.textContent = combat.hero.pv;
-    heroMana.textContent = combat.hero.mana;
+    // Debug
+    // console.log('updateUI appelée - Hero PV:', combat.hero.pv, 'Monster PV:', combat.monster.pv);
     
-    // monstre :
-    document.getElementById('monsterPV').textContent = combat.monster.pv;
-    
-    // desactiover le bouton magie si pas assez de mana
-    if (btnMagic && combat.hero.mana < 3) {
-        btnMagic.disabled = true;
-        btnMagic.textContent = 'attaque Magique (pas assez de mana)';
+    // sidebar hero
+    const heroPVSidebarElement = document.getElementById('heroPVSidebar');
+    console.log('heroPVSidebarElement trouvé:', heroPVSidebarElement);
+    if (heroPVSidebarElement) {
+        heroPVSidebarElement.textContent = combat.hero.pv;
+        console.log('Hero PV mis à jour dans la sidebar à :', combat.hero.pv);
+        // maj bar pv
+        const heroHpBarSidebar = document.getElementById('heroHpBarSidebar');
+        console.log('heroHpBarSidebar trouvé:', heroHpBarSidebar);
+        if (heroHpBarSidebar) {
+            const percentage = Math.max(0, (combat.hero.pv / combat.hero.maxPv) * 100);
+            heroHpBarSidebar.setAttribute('style', 'width: ' + percentage + '% !important');
+        } else {
+            console.warn('heroHpBarSidebar non trouvé!');
+        }
+    } else {
+        console.warn('heroPVSidebarElement non trouvé!');
     }
+    
+    // mana si possinble
+    if (combat.hero.class === 'Magicien') {
+        const heroManaElement = document.getElementById('heroManaSidebar');
+        console.log('heroManaElement trouvé:', heroManaElement);
+        if (heroManaElement) {
+            heroManaElement.textContent = combat.hero.mana;
+            // Mettre à jour la barre de mana
+            const heroManaBars = document.getElementById('heroManaBarSidebar');
+            if (heroManaBars) {
+                const percentage = (combat.hero.mana / combat.hero.maxMana) * 100;
+                heroManaBars.style.width = percentage + '%';
+            }
+        }
+    }
+    
+    // maj bar et pv monstre
+    const monsterPVElement = document.getElementById('monsterPV');
+    console.log('monsterPVElement trouvé:', monsterPVElement);
+    if (monsterPVElement) {
+        monsterPVElement.textContent = combat.monster.pv;
+        console.log('Monster PV mis à jour à :', combat.monster.pv);
+    } else {
+        console.warn('monsterPVElement non trouvé!');
+    }
+    const monsterHpBar = document.getElementById('monsterHpBar');
+    console.log('monsterHpBar trouvé:', monsterHpBar);
+    if (monsterHpBar) {
+        const percentage = (combat.monster.pv / combat.monster.maxPv) * 100;
+        monsterHpBar.setAttribute('style', 'width: ' + percentage + '% !important');
+        console.log('Barre monstre mise à jour à :', percentage + '%');
+    } else {
+        console.warn('monsterHpBar non trouvé!');
+    }
+    
+    // pas de bouton magie si pas assez de mana
+    if (combat.hero.class === 'Magicien') {
+        const btnMagic = document.getElementById('btnMagic');
+        if (btnMagic && combat.hero.mana < 3) {
+            btnMagic.disabled = true;
+            btnMagic.textContent = 'attaque Magique (pas assez de mana)';
+        }
+    }
+    
+    checkHeroDeath();
 }
 
 // calcul attaque physique
@@ -53,17 +155,53 @@ function calculDegatPhysique(attaquant, defenseur, isHeroAttacking) {
     return Math.max(0, attack - defense);
 }
 
-// Calcul attaque magique
+//  attaque magique
 function calculDegatMagique(defenseur, manaCost) {
-    const armorBonus = 0;
     const attack = (rollDice(6) + rollDice(6)) + manaCost;
-    const defense = rollDice(6) + Math.floor(defenseur.strength / 2) + armorBonus;
+    const defense = rollDice(6) + Math.floor(defenseur.strength / 2);
     return Math.max(0, attack - defense);
 }
 
-// Action du héros
+// action  héros
 function heroAction(action) {
-    if (action === 'physical_attack') {
+    if (action === 'drink_potion') {
+        if (potions.count <= 0) {
+            return;
+        }
+        
+        potions.count--;
+        const healValue = potions.healValue;
+        
+        combat.hero.pv = Math.min(combat.hero.pv + healValue, combat.hero.maxPv);
+        
+        // side baar
+        const heroPVSidebar = document.getElementById('heroPVSidebar');
+        if (heroPVSidebar) {
+            heroPVSidebar.textContent = combat.hero.pv;
+        }
+        const heroHpBarSidebar = document.getElementById('heroHpBarSidebar');
+        if (heroHpBarSidebar) {
+            const percentage = (combat.hero.pv / combat.hero.maxPv) * 100;
+            heroHpBarSidebar.style.width = percentage + '%';
+        }
+        
+        //  compteur potions 
+        const potionCountElement = document.getElementById('potionCountBattle');
+        console.log('potionCountElement trouvé:', potionCountElement);
+        if (potionCountElement) {
+            potionCountElement.textContent = potions.count;
+            console.log('Compteur potion mis à jour à :', potions.count);
+        } else {
+            console.warn('potionCountBattle non trouvé!');
+        }
+        if (potions.count === 0) {
+            const btnPotion = document.getElementById('btnPotion');
+            if (btnPotion) btnPotion.disabled = true;
+        }
+        
+        addLog('Vous buvez une potion et récupérez ' + healValue + ' PV!');
+        
+    } else if (action === 'physical_attack') {
         const domages = calculDegatPhysique(combat.hero, combat.monster, true);
         combat.monster.pv -= domages;
         addLog(`vous attaquez et infligez ${domages} points de degats !`);
@@ -82,10 +220,7 @@ function heroAction(action) {
             addLog(`Vous infligez ${domages} points de dégats.`);
         }
         
-    } else if (action === 'use_potion') {
-        addLog(`🧪 Vous utilisez une potion... (système à venir)`);
-        // TODO: Implémenter le système de potions
-    }
+    } 
 }
 
 // action du monstre
@@ -95,10 +230,18 @@ function monstreAction() {
     addLog(`${combat.monster.name} utilise ${combat.monster.attack} et vous infliges ${domages} points de dégats !`);
 }
 
-// Vérifier la fin du combat
+
+
+
 function checkFinCombat() {
     if (combat.hero.pv <= 0) {
         // defaite
+        showGamePopup('Defaite...', `Vous avez été vaincu par ${combat.monster.name}.`, 'red', [{
+            text: 'OK',
+            class: 'btn btn-secondary',
+            callback: () => {}
+        }]);
+
         addLog(`defaite... Vous avez été vaincu par ${combat.monster.name}.`);
         finCombat('defaite');
         return true;
@@ -119,6 +262,11 @@ function checkFinCombat() {
 async function finCombat(result) {
     document.getElementById('combatActions').style.display = 'none';
     
+    // elems
+    const resultDiv = document.getElementById('combatResult');
+    const resultMessage = document.getElementById('resultMessage');
+    const resultDetails = document.getElementById('resultDetails');
+    
     // afficher le message de la fin
     if (result === 'victoire') {
         resultMessage.textContent = 'Victoire !';
@@ -132,7 +280,7 @@ async function finCombat(result) {
     
     // sauvegrde des resultats
     try {
-        const response = await fetch('../php/saveCombat.php', {
+        const response = await fetch('/DungeonXplorer/public/save-combat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -143,7 +291,8 @@ async function finCombat(result) {
                 xp_gained: result === 'victoire' ? combat.monster.xp : 0,
                 hero_pv: Math.max(0, combat.hero.pv),
                 hero_mana: combat.hero.mana,
-                chapter_id: combat.chapterId
+                chapter_id: combat.chapterId,
+                nbPotions : potions.count
             })
         });
         
@@ -151,7 +300,7 @@ async function finCombat(result) {
         
         if (data.success) {
             setTimeout(() => {
-                window.location.href = 'index.php';
+                window.location.href = '/DungeonXplorer/public/game';
             }, 3000);
         } else {
             alert('erreur sauvegarde : ' + data.error);
@@ -159,12 +308,16 @@ async function finCombat(result) {
         
     } catch (error) {
         console.error('Erreur:', error);
-        alert('Erreur de connexion au serveur', error);
+        alert('Erreur de connexion au serveur: ' + error.message);
     }
 }
 
 // un tour de combat
 function executeTurn(action) {
+    if (combat.hero.pv <= 0) {
+        return;
+    }
+    
     combat.turn++;
     addLog(`\n--- Tour ${combat.turn} ---`);
     
@@ -198,3 +351,9 @@ function executeTurn(action) {
     updateUI();
 }
 
+window.addEventListener('load', () => {
+    console.log('Page chargée - Vérification de l\'état du héros');
+    setTimeout(() => {
+        checkHeroDeath();
+    }, 100);
+});
