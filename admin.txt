@@ -1,0 +1,3 @@
+name : comegp
+pswd : comegp
+https://dungeonxplorer.marinjabet.com/
