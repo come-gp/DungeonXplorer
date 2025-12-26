@@ -1,3 +1,5 @@
 # Ignorer le dossier contenant les images
-imgs/
-
+.env
+/vendor/
+/public/imgs/illuChap/
+/imgs/illuChap/
