@@ -1,0 +1,93 @@
+Christophe Vallot DungeonXplorer 1
+RÈGLES DE COMBAT
+DungeonXplorer
+1. Définition des Classes et Attributs des Personnages
+• Personnage : Chaque personnage appartient à une classe (Guerrier, Voleur, Magicien),
+dispose de PV, d'initiative, de force, de mana (0 pour le Guerrier, maximum de 10 pour le
+Voleur), et d'équipement (armure, armes, bouclier selon sa classe).
+• Monstre : Un monstre possède aussi des PV, de la force, de l’initiative, et potentiellement de
+la magie (avec un pool de mana et des sorts).
+2. Calcul de l’Initiative
+• But : Déterminer qui attaque en premier.
+• Calcul : Lancer un dé à 6 faces (1D6) et ajouter la valeur d'initiative de chaque combattant.
+$initiative = rand(1, 6) + $personnage->initiative;
+En cas d’égalité d’initiative, le monstre prend la priorité, sauf si le joueur est un Voleur (dans ce
+cas, le Voleur gagne).
+3. Actions Possibles par Tour
+• Chaque tour, le personnage peut choisir parmi :
+o Attaque physique
+o Attaque magique (si le personnage est un Magicien et dispose de mana)
+o Utiliser une potion pour restaurer des PV ou du mana.
+4. Attaque Physique
+• Formule pour une attaque physique :
+$attaque = rand(1, 6) + $attaquant->force + $bonus_arme;
+• Défense : L’adversaire calcule sa défense en fonction de sa classe :
+o Guerrier ou Magicien : 1D6 + force/2 + bonus_armure
+o Voleur : 1D6 + initiative/2 + bonus_armure
+ $defense = rand(1, 6) + (int)($defenseur->force / 2) + $bonus_armure;
+• Dégâts :
+o Si la différence entre l'attaque et la défense est positive, elle est retirée des PV du
+défenseur.
+$degats = max(0, $attaque - $defense);
+$defenseur->pv -= $degats;
+5. Attaque Magique (réservée au Magicien et aux Monstres magiques)
+• Conditions : Le Magicien doit disposer de mana et choisir de lancer un sort.
+• Décompte de Mana : La mana du sort est soustraite de la réserve de mana du Magicien.
+• Formule pour une attaque magique :
+$attaque_magique = (rand(1, 6) + rand(1, 6)) + $valeur_mana_sort;
+$attaquant->mana -= $valeur_mana_sort;
+• Défense : Identique à celle des attaques physiques.
+• Dégâts : Si l’attaque magique est supérieure à la défense, la différence est retirée des PV du
+défenseur.
+$degats = max(0, $attaque_magique - $defense);
+$defenseur->pv -= $degats;
+6. Utilisation d’une Potion
+• Le joueur peut choisir de boire une potion pour restaurer :
+o PV ou Mana selon le type de potion.
+• Effets de la potion : Ajouter la valeur restaurée aux PV ou mana du personnage, sans
+dépasser les valeurs maximales autorisées.
+if ($potion->type === 'pv') {
+$personnage->pv = min($personnage->pv + $potion->valeur, $personnage->pv_max);
+Christophe Vallot DungeonXplorer 3
+} elseif ($potion->type === 'mana') {
+$personnage->mana = min($personnage->mana + $potion->valeur, $personnage-
+>mana_max);
+}
+7. Exemple de Pseudo-code pour un Tour de Combat
+function tourCombat($attaquant, $defenseur) {
+// Calcul de l'initiative
+$initiativeAttaquant = rand(1, 6) + $attaquant->initiative;
+$initiativeDefenseur = rand(1, 6) + $defenseur->initiative;
+// Détermination de l'attaquant
+if ($initiativeAttaquant >= $initiativeDefenseur || $attaquant->classe == 'Voleur') {
+// Choix de l’action par l'attaquant
+$choix = $attaquant->choisirAction(); // 'physique', 'magie', ou 'potion'
+if ($choix === 'physique') {
+// Attaque physique
+$attaque = rand(1, 6) + $attaquant->force + $attaquant->arme->bonus;
+$defense = rand(1, 6) + (int)($defenseur->force / 2) + $defenseur->armure->bonus;
+$degats = max(0, $attaque - $defense);
+$defenseur->pv -= $degats;
+Christophe Vallot DungeonXplorer 4
+} elseif ($choix === 'magie' && $attaquant->classe == 'Magicien' && $attaquant->mana >=
+$cout_sort) {
+// Attaque magique
+$attaque_magique = (rand(1, 6) + rand(1, 6)) + $cout_sort;
+$attaquant->mana -= $cout_sort;
+$defense = rand(1, 6) + (int)($defenseur->force / 2) + $defenseur->armure->bonus;
+$degats = max(0, $attaque_magique - $defense);
+} elseif ($choix === 'potion') {
+// Boire une potion
+$potion = $attaquant->choisirPotion();
+if ($potion->type === 'pv') {
+$attaquant->pv = min($attaquant->pv + $potion->valeur, $attaquant->pv_max);
+} elseif ($potion->type === 'mana') {
+$attaquant->mana = min($attaquant->mana + $potion->valeur, $attaquant-
+>mana_max);
+}
+}
+}
+// Boucle jusqu'à ce qu'un protagoniste meure
+return $attaquant->pv > 0 && $defenseur->pv > 0 ? tourCombat($defenseur, $attaquant) :
+"Fin du combat";
+}

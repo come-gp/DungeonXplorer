@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="<?= base_url('/css/navbar.css') ?>">
     <link rel="stylesheet" href="<?= base_url('/css/home.css') ?>?v=<?= time() ?>">
 </head>
-<body style="background-image: url('../imgs/foret.jpg'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;">
+<body style="background-image: url('<?= base_url('/imgs/foret.jpg') ?>'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;">
     <?php require __DIR__ . '/components/navbar.php'; ?>
 
     <div class="container my-5">

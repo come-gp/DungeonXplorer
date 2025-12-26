@@ -1,7 +1,5 @@
 # Ignorer le dossier contenant les images
-
-
 .env
-
-
 /vendor/
+/public/imgs/illuChap/
+/imgs/illuChap/

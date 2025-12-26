@@ -65,8 +65,6 @@ class GameController{
         // $stmt->execute([$hero['id']]);
         // $progress = $stmt->fetch();
 
-        echo "hero id: " . $hero['id']; // Debug line
-
         $progress = $this->heroModel->getProgress($hero['id']);
 
 
@@ -118,10 +116,23 @@ class GameController{
         // $stmt->execute([$currentChapterId]);
         // $treasures = $stmt->fetchAll();
         $treasures = $this->ChapterModel->getLootByChapterId($currentChapterId);
+        // print_r($treasures[0]['item_id']);
+        // foreach ($treasures as $treasure) {
+        //     print_r($treasure['item_id']);
+        //     print_r($hero['id']);
+        //     print_r($treasure['quantity']);
+        // }
+
+        foreach ($treasures as $treasure) {
+            $this->heroModel->addToInventory($hero['id'], $treasure['item_id'], 1);
+        }
+
+        // recup inventaire
+        $inventory = $this->heroModel->getInventory($hero['id']);
+
+       
 
 
-
-        // Charger la vue
         require __DIR__ . '/../Views/game.php';
     }
 
@@ -136,63 +147,146 @@ class GameController{
             exit();
         }
 
-        // require __DIR__ . '/../core/helpers.php';
-        //require __DIR__ . '/../../php/Database.php';
+        $hero = $this->heroModel->getActiveHeroByUserId($_SESSION['user_id']);
 
-        $error = '';
-        $success = '';
-        $pseudo = '';
+        // Traitement des actions de potion en combat
+        // if (isset($_POST['drink_potion'])) {
+        //     // Récupérer le nombre total de potions
+        //     $inventory = $this->heroModel->getInventory($hero['id']);
+        //     $potionCount = 0;
+        //     $potionItemId = null;
+            
+        //     foreach ($inventory as $item) {
+        //         if (strpos($item['item_type'], 'potion') !== false) {
+        //             $potionCount += $item['quantity'];
+        //             $potionItemId = $item['id'];
+        //         }
+        //     }
+            
+        //     if ($potionCount > 0 && $potionItemId) {
+        //         // Restaurer 30 PV
+        //         $newPV = min($hero['pv'] + 30, $hero['max_pv']);
+        //         $healAmount = $newPV - $hero['pv'];
+                
+        //         // Utiliser la potion
+        //         $this->heroModel->usePotion($hero['id'], $potionItemId);
+                
+        //         // Mettre à jour les PV du héros
+        //         $this->heroModel->updateHeroStats($hero['id'], ['pv' => $newPV]);
+                
+        //         $_SESSION['success'] = "Potion bue! Restauration de " . $healAmount . " PV.";
+        //     } else {
+        //         $_SESSION['error'] = "Vous n'avez pas de potion!";
+        //     }
+            
+        //     header('Location: ' . base_url('/game'));
+        //     exit();
+        // }
 
-        
+        // // Traitement des actions de potion
+        // if (isset($_POST['use_potion'])) {
+        //     $itemId = (int)$_POST['use_potion'];
+            
+        //     // Vérifier que la potion existe dans l'inventaire
+        //     $potion = $this->heroModel->getPotion($hero['id'], $itemId);
+            
+        //     if ($potion && $potion['quantity'] > 0) {
+        //         // Utiliser la potion
+        //         $this->heroModel->usePotion($hero['id'], $itemId);
+                
+        //         $_SESSION['success'] = 'Potion ' . htmlspecialchars($potion['name']) . ' utilisée!';
+        //     } else {
+        //         $_SESSION['error'] = 'Vous n\'avez pas cette potion!';
+        //     }
+            
+        //     header('Location: ' . base_url('/game'));
+        //     exit();
+        // }
 
         // traitement des action
-        if ( isset($_POST['next_chapter'])) {
+        if (isset($_POST['next_chapter'])) {
             $nextChapterId = (int)$_POST['next_chapter'];
             
             // save progression
-            // $stmt = $db->prepare('
-            //     INSERT INTO hero_progress (hero_id, chapter_id, status, completion_date)
-            //     VALUES (?, ?, "Completed", NOW())
-            // ');
-            // $stmt->execute([$hero['id'], $nextChapterId]);
-            
-
-            // recup hero 
-
-            $hero = $this->heroModel->getActiveHeroByUserId($_SESSION['user_id']);
             $this->heroModel->saveProgress($hero['id'], $nextChapterId);
-            
-            // tresors (marche surement pas)
-            // if (!empty($treasures)) {
-            //     foreach ($treasures as $treasure) {
-            //         $stmt = $db->prepare('SELECT * FROM inventory WHERE hero_id = ? AND item_id = ?');
-            //         $stmt->execute([$hero['id'], $treasure['item_id']]);
-            //         $existing = $stmt->fetch();
-                    
-            //         if ($existing) {
-            //             $stmt = $db->prepare('UPDATE inventory SET quantity = quantity + ? WHERE hero_id = ? AND item_id = ?');
-            //             $stmt->execute([$treasure['quantity'], $hero['id'], $treasure['item_id']]);
-            //         } else {
-            //             $stmt = $db->prepare('INSERT INTO inventory (hero_id, item_id, quantity) VALUES (?, ?, ?)');
-            //             $stmt->execute([$hero['id'], $treasure['item_id'], $treasure['quantity']]);
-            //         }
-            //     }
-            // }
             
             header('Location: ' . base_url('/game'));
             exit();
         }
 
-        // savoir si il y a un combat
-        $inCombat = $encounter ? true : false;
+        // Traitement des actions de combat (à implémenter avec le système de combat)
+        if (isset($_POST['combat_action'])) {
+            $action = $_POST['combat_action'];
+            // À implémenter selon le système de combat
+        }
 
-
-
-
-        
-
-        // Charger la vue
-        //require __DIR__ . '/../Views/register.php';
         header('Location: ' . base_url('/game'));
+    }
+
+    public function saveCombat()
+    {
+        header('Content-Type: application/json');
+
+        if (!isset($_SESSION['user_id'])) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'error' => 'Non authentifié']);
+            exit();
+        }
+
+        // Récupérer les données JSON du body
+        $inputData = json_decode(file_get_contents('php://input'), true);
+
+        if (!$inputData) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'Données invalides']);
+            exit();
+        }
+
+        try {
+            $heroId = (int)($inputData['hero_id'] ?? 0);
+            $result = $inputData['result'] ?? '';
+            $xpGained = (int)($inputData['xp_gained'] ?? 0);
+            $heroPv = (int)($inputData['hero_pv'] ?? 0);
+            $heroMana = (int)($inputData['hero_mana'] ?? 0);
+            $chapterId = (int)($inputData['chapter_id'] ?? 0);
+            $nbPotions = (int)($inputData['nbPotions'] ?? 0);
+
+            if (!$heroId || !$result) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'Données manquantes']);
+                exit();
+            }
+
+            // maj pv et mana hero
+            $this->heroModel->updateHeroPv($heroId, $heroPv);
+            $this->heroModel->updateHeroMana($heroId, $heroMana);
+
+            $this->heroModel->setItemInventory($heroId, 1, $nbPotions); // item_id 1 = potion de soin
+
+            // victoire
+            if ($result === 'victoire' && $xpGained > 0) {
+                $this->heroModel->addXp($heroId, $xpGained);
+                
+                // si le hero peut changer de niveau
+                $hero = $this->heroModel->getHeroById($heroId);
+                $currentLevel = getLevelFromXp($hero['xp']);
+                
+                // level up
+                if ($currentLevel > $hero['current_level']) {
+                    // maj niveau
+                    $this->heroModel->updateHeroStats($heroId, ['current_level' => $currentLevel]);
+                }
+
+                //  enregistrer
+                $nextChapterId = $chapterId + 1;
+                $this->heroModel->saveProgress($heroId, $nextChapterId);
+            }
+
+            echo json_encode(['success' => true]);
+
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'Erreur serveur: ' . $e->getMessage()]);
+        }
     }
 }

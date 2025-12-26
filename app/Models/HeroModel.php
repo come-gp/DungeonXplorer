@@ -181,5 +181,95 @@ class HeroModel
         return $stmt->execute([$heroId, $chapterId]);
     }
 
+    public function getInventory(int $heroId): array
+    {
+        $stmt = $this->db->prepare('
+            SELECT i.id, i.name, i.description, i.item_type, inv.quantity
+            FROM inventory inv
+            JOIN items i ON inv.item_id = i.id
+            WHERE inv.hero_id = ? AND inv.quantity > 0
+            ORDER BY i.name
+        ');
+        $stmt->execute([$heroId]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 
+    public function getPotion(int $heroId, int $itemId): ?array
+    {
+        $stmt = $this->db->prepare('
+            SELECT i.id, i.name, i.description, i.item_type, inv.quantity
+            FROM inventory inv
+            JOIN items i ON inv.item_id = i.id
+            WHERE inv.hero_id = ? AND inv.item_id = ? AND inv.quantity > 0
+        ');
+        $stmt->execute([$heroId, $itemId]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    public function usePotion(int $heroId, int $itemId): bool
+    {
+        $stmt = $this->db->prepare('
+            UPDATE inventory 
+            SET quantity = quantity - 1 
+            WHERE hero_id = ? AND item_id = ? AND quantity > 0
+        ');
+        return $stmt->execute([$heroId, $itemId]);
+    }
+
+    public function addToInventory(int $heroId, int $itemId, int $quantity = 1): bool
+    {
+        // si l'item est deja dans l'inventaure
+        $stmt = $this->db->prepare('
+            SELECT id FROM inventory 
+            WHERE hero_id = ? AND item_id = ?
+        ');
+        $stmt->execute([$heroId, $itemId]);
+        $exists = $stmt->fetch();
+
+        if ($exists) {
+            //maj quantity
+            $stmt = $this->db->prepare('
+                UPDATE inventory 
+                SET quantity = quantity + ? 
+                WHERE hero_id = ? AND item_id = ?
+            ');
+            return $stmt->execute([$quantity, $heroId, $itemId]);
+        } else {
+            // insert
+            $stmt = $this->db->prepare('
+                INSERT INTO inventory (hero_id, item_id, quantity)
+                VALUES (?, ?, ?)
+            ');
+            return $stmt->execute([$heroId, $itemId, $quantity]);
+        }
+    }
+
+
+    public function setItemInventory(int $heroId, int $itemId, int $quantity = 1): bool
+    {
+        // si l'item est deja dans l'inventaure
+        $stmt = $this->db->prepare('
+            SELECT id FROM inventory 
+            WHERE hero_id = ? AND item_id = ?
+        ');
+        $stmt->execute([$heroId, $itemId]);
+        $exists = $stmt->fetch();
+
+        if ($exists) {
+            //maj quantity
+            $stmt = $this->db->prepare('
+                UPDATE inventory 
+                SET quantity =  ? 
+                WHERE hero_id = ? AND item_id = ?
+            ');
+            return $stmt->execute([$quantity, $heroId, $itemId]);
+        } else {
+            // insert
+            $stmt = $this->db->prepare('
+                INSERT INTO inventory (hero_id, item_id, quantity)
+                VALUES (?, ?, ?)
+            ');
+            return $stmt->execute([$heroId, $itemId, $quantity]);
+        }
+    }
 }
