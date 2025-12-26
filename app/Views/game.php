@@ -116,10 +116,10 @@
                         </div>
                     </div>
                     <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                        <a href="<?= base_url('/heroes') ?>" class="btn" style="background-color: #C4975E; color: #1A1A1A; font-weight: 600;">
+                        <a href="<?= base_url('/profile') ?>" class="btn" style="background-color: #C4975E; color: #1A1A1A; font-weight: 600;">
                             <i class="fas fa-users me-2"></i>Mes Héros
                         </a>
-                        <a href="<?= base_url('/hero/create') ?>" class="btn btn-outline-light">
+                        <a href="<?= base_url('/new-game') ?>" class="btn btn-outline-light">
                             <i class="fas fa-plus me-2"></i>Créer un Nouveau Héros
                         </a>
                     </div>
@@ -144,6 +144,11 @@
                     <!-- mode comabt-->
                     <div class="row">
                         <div class="col-lg-12">
+                            <div style="margin-bottom: 1rem;background-color: #2E2E2E; padding: 1rem; border-radius: 8px; border-left: 4px solid #C4975E;">
+                                <div style="color: #E5E5E5; line-height: 1.8; margin-bottom: 0rem;">
+                                    <p><?= nl2br(htmlspecialchars($chapterContent['content'] ?? 'Contenu non disponible.')) ?></p>
+                                </div>
+                            </div>
                             <h2 style="color: #C4975E; margin-bottom: 2rem;"><i class="fas fa-dragon me-2"></i><?= htmlspecialchars($encounter['name']) ?></h2>
                             
                             <!-- resultat combat -->
