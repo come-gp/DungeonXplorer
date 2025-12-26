@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <title>Dungeon Explorer</title>
 
@@ -42,12 +42,12 @@
                 <?php endif; ?>
 
                 <?php if ($isLoggedIn): ?>
-                    <a href="<?= base_url('/new-game') ?>"><button class="btn-primary">Nouvelle Partie</button></a>
-                    <a href="<?= base_url('/game') ?>"><button class="btn-primary">Reprendre</button></a>
-                    <a href="<?= base_url('/profile') ?>"><button class="btn-primary">Charger</button></a>
+                    <a href="<?= base_url('/new-game') ?>" class="btn-primary">Nouvelle Partie</a>
+                    <a href="<?= base_url('/game') ?>" class="btn-primary">Reprendre</a>
+                    <a href="<?= base_url('/profile') ?>" class="btn-primary">Charger</a>
                 <?php else: ?>
-                    <a href="<?= base_url('/register') ?>"><button class="btn-primary">S'inscrire</button></a>
-                    <a href="<?= base_url('/login') ?>"><button class="btn-primary">Se Connecter</button></a>
+                    <a href="<?= base_url('/register') ?>" class="btn-primary">S'inscrire</a>
+                    <a href="<?= base_url('/login') ?>" class="btn-primary">Se Connecter</a>
                 <?php endif; ?>
             </div>
             <div class="col pt-4">
@@ -80,6 +80,7 @@
                     
                 </div>
             </div>
+        </div>
     </div>
 
     <!-- Bootstrap JS Bundle -->
