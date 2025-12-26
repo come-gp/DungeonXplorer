@@ -132,7 +132,7 @@ CREATE TABLE `class` (
 
 INSERT INTO `class` (`id`, `name`, `description`, `base_pv`, `base_mana`, `strength`, `initiative`, `max_items`) VALUES
 (1, 'Voleur', 'Un assassin agile qui frappe vite et disparaît dans les ombres', 18, 8, 6, 10, 4),
-(2, 'Bourin', 'Un guerrier brutal et impitoyable doué d\'une force extraordinaire', 35, 3, 14, 3, 6),
+(2, 'Bourin', 'Un guerrier brutal et impitoyable doué d une force extraordinaire', 35, 3, 14, 3, 6),
 (3, 'Mage', 'Un utilisateur de magie capable de puissants sorts dévastateurs', 15, 25, 3, 6, 4);
 
 -- --------------------------------------------------------
@@ -220,6 +220,11 @@ CREATE TABLE `items` (
   `item_type` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+
+-- Ajouter les potions de base
+INSERT INTO `items` (`id`, `name`, `description`, `item_type`) VALUES
+(1, 'Potion', 'Restaure 15 points de vie', 'potion_pv'),
+(5, 'Potion Mana', 'Restore 10 Mana (Pour le mage)', 'potion_mana');
 -- --------------------------------------------------------
 
 --
