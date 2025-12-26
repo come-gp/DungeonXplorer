@@ -102,6 +102,12 @@ $router->post('/profile', function() {
     $controller->update();
 });
 
+// Save combat result
+$router->post('/save-combat', function() {
+    $controller = new GameController();
+    $controller->saveCombat();
+});
+
 //logout
 $router->get('/logout', function() {
     session_destroy();
