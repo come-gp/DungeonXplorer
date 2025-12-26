@@ -47,9 +47,15 @@ class UserModel
     //     return $hero ?: null;
     // }
 
+    public function getAllUsers(): array
+    {
+        $stmt = $this->db->query('SELECT id, pseudo, is_admin FROM user');
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 
-
-
-
-
+    public function delete(int $id): void
+    {
+        $stmt = $this->db->prepare('DELETE FROM user WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+    }
 }

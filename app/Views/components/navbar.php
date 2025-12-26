@@ -6,7 +6,6 @@ if (session_status() === PHP_SESSION_NONE) {
 $isLoggedIn = isset($_SESSION['user_id']);
 $userId = $_SESSION['user_id'] ?? null;
 $userPseudo = $_SESSION['user_pseudo'] ?? null;
-$isAdmin = $_SESSION['is_admin'] ?? false;
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -47,14 +46,8 @@ $isAdmin = $_SESSION['is_admin'] ?? false;
                             
                             <?php if ($isAdmin): ?>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="<?= base_url('/admin/panel') ?>">
-                                    <i class="fas fa-tachometer-alt"></i> Panel Admin
-                                </a></li>
-                                <li><a class="dropdown-item" href="<?= base_url('/admin/users') ?>">
-                                    <i class="fas fa-users"></i> Gestion Utilisateurs
-                                </a></li>
-                                <li><a class="dropdown-item" href="<?= base_url('/admin/chapters') ?>">
-                                    <i class="fas fa-book"></i> Gestion Chapitres
+                                <li><a class="dropdown-item" href="<?= base_url('/admin') ?>">
+                                    <i class="fas fa-tachometer-alt"></i> Panel Administrateur
                                 </a></li>
                             <?php endif; ?>
                             

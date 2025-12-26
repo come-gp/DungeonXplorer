@@ -13,6 +13,7 @@ use App\Controllers\RegisterController;
 use App\Controllers\NewGameController;
 use App\Controllers\GameController;
 use App\Controllers\ProfileController;
+use App\Controllers\AdminController;
 
 $router = new Router();
 
@@ -113,7 +114,18 @@ $router->get('/logout', function() {
     session_destroy();
     header('Location: /DungeonXplorer/public/login');
     exit;
-});     
+});
+
+// admin
+$router->get('/admin', function() {
+    $controller = new AdminController();
+    $controller->show();
+});
+
+$router->post('/admin', function() {
+    $controller = new AdminController();
+    $controller->show();
+});
 
 // 404
 $router->set404(function() {

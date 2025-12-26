@@ -12,6 +12,7 @@ class HomeController {
         $this->homeModel = new HomeModel();
         $userId = $_SESSION['user_id'] ?? null;
         $error = $_SESSION['error'] ?? '';
+        
         unset($_SESSION['error']);
 
         $success = $_SESSION['success'] ?? '';
@@ -20,7 +21,7 @@ class HomeController {
         $chapter = null;
         
         $isLoggedIn = isset($_SESSION['user_id']);
-
+        $isAdmin = $isLoggedIn && $this->homeModel->isAdmin($_SESSION['user_id']);
         
         
         if ($isLoggedIn) {

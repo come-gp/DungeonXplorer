@@ -72,4 +72,19 @@ class ChapterModel
         $stmt->execute([$chapterId]);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
+
+    public function getAllChapters(): array
+    {
+        $stmt = $this->db->query(
+                'SELECT id, title, content
+                 FROM chapter'
+            );
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function delete(int $id): void
+    {
+        $stmt = $this->db->prepare('DELETE FROM chapter WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+    }
 }

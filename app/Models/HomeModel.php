@@ -69,4 +69,14 @@ class HomeModel
         $class = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $class ?: null;
     }
+
+    function isAdmin(int $userId): bool
+    {
+        $stmt = $this->db->prepare('
+        SELECT is_admin FROM user WHERE id = ?
+        ');
+        $stmt->execute([$userId]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return (bool)$result['is_admin'];
+    }
 }
